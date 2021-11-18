@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ex_plorer.NTFS
+namespace ex_plorer.NTFS.Files
 {
     class File : IFile
     {
@@ -24,12 +24,22 @@ namespace ex_plorer.NTFS
             this.Parent = parent;
         }
 
+        ~File()
+        {
+            if (Parent != null)
+            {
+                List<IFile> parentChilds = Parent.GetChilds().ToList();
+                parentChilds.Remove(this);
+                Parent.SetChilds(parentChilds);
+            }
+        }
+
 
         // by interface
         public void SetFilePath(string newFilePath)
         {
             FilePath = newFilePath;
-            Parent = MFT.GetDir(FilePath);
+            Parent = MFT.GetParentDir(FilePath);
         }
         public Dictionary<string, BlockStream> GetStreams() => streams;
         public IFile GetParent() => Parent;

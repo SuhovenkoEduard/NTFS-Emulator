@@ -18,7 +18,7 @@ namespace ex_plorer.NTFS
         public int BusyBlocks => busyMemory.Count;
         public int AllBlocks => FreeBlocks + BusyBlocks;
 
-        public MasterFileTable(int sizeInBlocks = 100, string diskName = "C:\\")
+        public MasterFileTable(int sizeInBlocks = 100, string diskName = "C:")
         {
             freeMemory = new List<Block1KB>(sizeInBlocks);
             busyMemory = new List<Block1KB>();
@@ -30,13 +30,25 @@ namespace ex_plorer.NTFS
         
 
         public IFile CreateFile(string fileName, string fileExtension = "", IFile parent = null)
-           => new File(this, fileName, fileExtension, parent);
+        {
+            IFile newFile = new File(this, fileName, fileExtension, parent);
+            parent?.SetChilds(parent?.GetChilds().Append(newFile));
+            files.Add(newFile);
+            return newFile;
+        }
 
+        public IFile CreateDirectory(string directoryName, IFile parent = null)
+        {
+            IFile newDirectory = new Directory(this, directoryName, parent);
+            parent?.SetChilds(parent?.GetChilds().Append(newDirectory));
+            files.Add(newDirectory);
+            return newDirectory;
+        }
 
         public IFile CopyFile(string fromPath, string toPath)
         {
             IFile currentFile = files.Find(file => file.GetFilePath() == fromPath);
-            IFile toDir = GetDir(toPath);
+            IFile toDir = GetParentDir(toPath);
             if (fromPath == toPath) return currentFile;
             return currentFile.Clone(toDir);            
         }
@@ -69,12 +81,22 @@ namespace ex_plorer.NTFS
                 return false;
             }
         }
-        public Directory GetDir(string filePath)
+        public Directory GetParentDir(string filePath)
         {
-            string dirPath =
-                filePath.Substring(0, filePath.LastIndexOf('\\')) + "\\";
+            string dirPath;
+            if (filePath[filePath.Length - 1] == '\\')
+            {
+                var words = filePath.Split('\\');
+                dirPath = words.Take(words.Length - 2).Aggregate("", (sum, x) => sum + x + "\\");
+            } else
+            {
+                dirPath = filePath.Substring(0, filePath.LastIndexOf('\\')) + "\\";
+            }
+            //List<string> filePaths = files.Select(x => x.GetFilePath()).ToList();
             return (Directory) files.Find(file => file.GetFilePath() == dirPath);
         }
+
+        public IFile GetFile(string path) => files.Find(file => file.GetFilePath() == path);
 
         // memory
         public List<Block1KB> AllocMemory(int sizeInBlocks)

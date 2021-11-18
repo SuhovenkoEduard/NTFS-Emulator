@@ -211,19 +211,18 @@ namespace ex_plorer
             folderView.SelectedItems.Clear();
 
             string baseName = "New folder";
-            string dirPath = Path.Combine(Manager.CurrentDir.FullName, baseName);
+            string dirPath = Path.Combine(Manager.CurrentDir.GetFilePath(), baseName);
 
             int counter = 0;
             while (Directory.Exists(dirPath))
             {
                 counter++;
-                dirPath = Path.Combine(Manager.CurrentDir.FullName, baseName + $" ({counter})");
+                dirPath = Path.Combine(Manager.CurrentDir.GetFilePath(), baseName + $" ({counter})");
             }
 
-            DirectoryInfo dir = new DirectoryInfo(dirPath);
-            dir.Create();
+            NTFS.Files.Directory directory = (NTFS.Files.Directory) MFT.CreateDirectory(baseName, Manager.CurrentDir);
 
-            ListViewItem newItem = Manager.GetDirItem(dir);
+            ListViewItem newItem = Manager.GetDirItem(directory);
             folderView.Items.Add(newItem);
             newItem.Selected = true;
             newItem.BeginEdit();
@@ -245,7 +244,7 @@ namespace ex_plorer
 
         private void TriggerPaste(object sender, EventArgs e)
         {
-            if (!Clipboard.ContainsFileDropList()) return;
+            /*if (!Clipboard.ContainsFileDropList()) return;
 
             folderView.SelectedItems.Clear();
 
@@ -255,7 +254,7 @@ namespace ex_plorer
                 if (File.Exists(path))
                 {
                     FileInfo source = new FileInfo(path);
-                    string targetPath = Path.Combine(Manager.CurrentDir.FullName, source.Name);
+                    string targetPath = Path.Combine(Manager.CurrentDir.GetFilePath(), source.Name);
                     source.CopyTo(targetPath, false);
 
                     FileInfo target = new FileInfo(targetPath);
@@ -268,7 +267,7 @@ namespace ex_plorer
                     //TODO: recursive directory pasting
                     throw new NotImplementedException();
                 }
-            }
+            }*/
         }
 
         private void TriggerDelete(object sender, EventArgs e)
@@ -332,7 +331,7 @@ namespace ex_plorer
         private void UpOneLevel(object sender, EventArgs e)
         {
             if (Manager.CurrentDir.Parent == null) return;
-            ChangePath(Manager.CurrentDir.Parent.FullName);
+            ChangePath(Manager.CurrentDir.Parent.GetFilePath());
         }
 
         private void GoToDirFromMenu(object sender, EventArgs e)
@@ -369,29 +368,34 @@ namespace ex_plorer
             if (folderView.SelectedItems.Count == 0) return;
 
             ListViewItem item = folderView.SelectedItems[0];
-            FileSystemInfo info = (FileSystemInfo)item.Tag;
+            NTFS.Files.IFile info = (NTFS.Files.IFile)item.Tag;
 
-            if (info is FileInfo file)
+            if (info is NTFS.Files.File file)
             {
                 try
                 {
-                    using (var fileStream = new FileStream(file.FullName, FileMode.OpenOrCreate))
+                    string textFromFile = "";
+                    EditForm editForm = new EditForm(file.GetFileName(), textFromFile, true);
+                    editForm.ShowDialog();
+
+                    /*using (var fileStream = new FileStream(file.FullName, FileMode.OpenOrCreate))
                     {
                         byte[] array = new byte[fileStream.Length];
                         fileStream.Read(array, 0, array.Length);
                         string textFromFile = System.Text.Encoding.Default.GetString(array);
                         EditForm editForm = new EditForm(file.Name, textFromFile, true);
                         editForm.ShowDialog();
-                    }
-                } catch (Exception exception)
+                    }*/
+                }
+                catch (Exception exception)
                 {
                     MessageBox.Show("Не удалось открыть файл: " + exception.Message);
                 }
                 //Process.Start(file.FullName);
             }
-            else if (info is DirectoryInfo dir)
+            else if (info is NTFS.Files.Directory dir)
             {
-                ChangePath(dir.FullName);
+                ChangePath(dir.GetFilePath());
             }
         }
 
@@ -411,16 +415,16 @@ namespace ex_plorer
                 return;
             }
 
-            FileSystemInfo info = (FileSystemInfo)item.Tag;
+            var info = item.Tag;
 
-            if (info is FileInfo file)
+            if (info is NTFS.Files.File file)
             {
-                file.MoveTo(Path.Combine(Manager.CurrentDir.FullName, newName));
+                MFT.RenameFile(file.GetFilePath(), Manager.CurrentDir.GetFilePath() + newName);
                 item.ImageKey = Manager.GetIconKey(file);
             }
-            else if (info is DirectoryInfo dir)
+            else if (info is NTFS.Files.Directory dir)
             {
-                dir.MoveTo(Path.Combine(Manager.CurrentDir.FullName, newName));
+                MFT.RenameFile(dir.GetFilePath(), Manager.CurrentDir.GetFilePath() + newName + "\\");
             }
         }
 

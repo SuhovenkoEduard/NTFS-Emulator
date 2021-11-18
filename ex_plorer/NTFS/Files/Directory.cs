@@ -10,7 +10,7 @@ namespace ex_plorer.NTFS.Files
     {
         public MasterFileTable MFT { get; }
         public IFile Parent { get; set; }
-        public string FileName { get; }
+        public string FileName { get; set; }
         public string FilePath { get; private set; }
         public string FileExtension { get; }
         public string LastModify { get; private set; }
@@ -28,16 +28,27 @@ namespace ex_plorer.NTFS.Files
             this.childs = new List<IFile>();
         }
 
+        ~Directory()
+        {
+            if (Parent != null)
+            {
+                List<IFile> parentChilds = Parent.GetChilds().ToList();
+                parentChilds.Remove(this);
+                Parent.SetChilds(parentChilds);
+            }
+        }
+
 
         // by interface
         public string GetFileName() => FileName;
         public string GetFilePath() =>
-            $"{Parent?.GetFilePath()}${FileName}\\";
+            $"{Parent?.GetFilePath()}{FileName}\\";
 
         public void SetFilePath(string newFilePath)
         {
+            FileName = newFilePath.Split('\\').Reverse().Skip(1).First();
             FilePath = newFilePath;
-            Parent = MFT.GetDir(FilePath);
+            Parent = MFT.GetParentDir(FilePath);
         }
         public string GetFileExtension() => FileExtension;
         public int GetFileSize() => GetChilds().Aggregate(0, (sum, x) => sum + x.GetFileSize());

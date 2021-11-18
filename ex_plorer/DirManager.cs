@@ -3,6 +3,7 @@ using ex_plorer.NTFS.Files;
 using ex_plorer.Properties;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -15,10 +16,10 @@ namespace ex_plorer
         private const string DirIcon = "$dir";
         private const string FileIcon = "$file";
 
-        //internal static DriveInfo[] Drives { get; } = DriveInfo.GetDrives();
+        internal static DriveInfo[] Drives { get; } = DriveInfo.GetDrives();
 
         private string Path;
-        public Directory CurrentDir;
+        public NTFS.Files.Directory CurrentDir;
 
         internal static Dictionary<string, IconPair> IconDictionary { get; } = new Dictionary<string, IconPair>();
 
@@ -31,7 +32,7 @@ namespace ex_plorer
         {
             this.MFT = MFT;
             Path = path;
-            CurrentDir = MFT.GetDir(path);
+            CurrentDir = (NTFS.Files.Directory) MFT.GetFile(path);
 
             // icons
             IconsSet = new List<string>();
@@ -66,11 +67,11 @@ namespace ex_plorer
                 ListViewItem item = null;
                 bool isDirectory = false;
 
-                if (iFile is File file)
+                if (iFile is NTFS.Files.File file)
                 {
                     item = GetFileItem(file);
                 }
-                else if (iFile is Directory dir)
+                else if (iFile is NTFS.Files.Directory dir)
                 {
                     item = GetDirItem(dir);
                     isDirectory = true;
@@ -82,7 +83,7 @@ namespace ex_plorer
             return items;
         }
 
-        internal ListViewItem GetFileItem(File file)
+        internal ListViewItem GetFileItem(NTFS.Files.File file)
         {
             ListViewItem item = new ListViewItem(file.GetFileName());
             item.SubItems.AddRange(new[]
@@ -97,7 +98,7 @@ namespace ex_plorer
             return item;
         }
 
-        internal ListViewItem GetDirItem(Directory dir)
+        internal ListViewItem GetDirItem(NTFS.Files.Directory dir)
         {
             ListViewItem item = new ListViewItem(dir.GetFileName());
             item.SubItems.AddRange(new[] {"", "Directory", dir.GetLastModify()});
@@ -107,7 +108,7 @@ namespace ex_plorer
             return item;
         }
 
-        internal string GetIconKey(File file)
+        internal string GetIconKey(NTFS.Files.File file)
         {
             string key;
             string ext = file.GetFileExtension();

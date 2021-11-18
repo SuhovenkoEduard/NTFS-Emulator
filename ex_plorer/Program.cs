@@ -18,8 +18,9 @@ namespace ex_plorer
             Application.VisualStyleState = VisualStyleState.NoneEnabled;
             Application.SetCompatibleTextRenderingDefault(false);
 
-            string path = args.Length > 0 ? args[0] : "C:\\";
-            MasterFileTable MFT = new MasterFileTable(100, path);
+            string driveName = "C:";
+            string path = driveName + "\\";
+            MasterFileTable MFT = new MasterFileTable(100, driveName);
 
             EditForm editForm = new EditForm("input.txt", "hkgfhjfhjflghkfgh \t");
             //editForm.Show();

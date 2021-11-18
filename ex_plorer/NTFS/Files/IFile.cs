@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ex_plorer.NTFS
+namespace ex_plorer.NTFS.Files
 {
     public interface IFile
     {
