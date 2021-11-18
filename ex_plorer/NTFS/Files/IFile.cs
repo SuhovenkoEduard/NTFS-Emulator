@@ -19,7 +19,7 @@ namespace ex_plorer.NTFS.Files
         IFile GetParent();
         IEnumerable<IFile> GetChilds();
         void SetChilds(IEnumerable<IFile> childs);
-        Dictionary<string, BlockStream> GetStreams();
-        void SetStreams(Dictionary<string, BlockStream> streams);
+        BlockStream GetStream();
+        void SetStream(BlockStream stream);
     }
 }

@@ -15,8 +15,8 @@ namespace ex_plorer.NTFS.Files
         public string FilePath { get; private set; }
         public string LastModify { get; private set; }
 
-        protected Dictionary<string, BlockStream> streams;
-        protected List<IFile> childs;
+        public BlockStream stream;
+        public List<IFile> childs;
 
         public Directory(MasterFileTable MFT, string fileName, IFile parent = null)
         {
@@ -26,7 +26,7 @@ namespace ex_plorer.NTFS.Files
             this.FileExtension = "";
             this.FilePath = GetFilePath();
             this.LastModify = DateTime.UtcNow.ToString();
-            this.streams = new Dictionary<string, BlockStream>();
+            this.stream = new BlockStream();
             this.childs = new List<IFile>();
         }
 
@@ -55,8 +55,8 @@ namespace ex_plorer.NTFS.Files
 
         public IFile GetParent() => this.Parent;
         public IEnumerable<IFile> GetChilds() => this.childs;
-        public Dictionary<string, BlockStream> GetStreams() => this.streams;
-        public void SetStreams(Dictionary<string, BlockStream> streams) => this.streams = streams;
+        public BlockStream GetStream() => this.stream;
+        public void SetStream(BlockStream stream) => this.stream = stream;
 
         public void SetLastModify(string lastModify) => this.LastModify = lastModify;
 

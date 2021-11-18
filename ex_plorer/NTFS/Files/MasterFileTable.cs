@@ -2,22 +2,24 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 
 namespace ex_plorer.NTFS
 {
+    [Serializable]
     public class MasterFileTable
     {
-        protected List<Block1KB> freeMemory;
-        protected List<Block1KB> busyMemory;
-        protected List<IFile> files;
+        public List<Block1KB> freeMemory;
+        public List<Block1KB> busyMemory;
+        [XmlIgnore]
+        public List<IFile> files;
 
         public int FreeBlocks => freeMemory.Count;
         public int BusyBlocks => busyMemory.Count;
         public int AllBlocks => FreeBlocks + BusyBlocks;
-
+        
+        public MasterFileTable() { }
         public MasterFileTable(int sizeInBlocks = 100, string diskName = "C:")
         {
             freeMemory = new List<Block1KB>(sizeInBlocks);

@@ -71,6 +71,7 @@
     <Compile Include="NativeIcon.cs" />
     <Compile Include="NTFS\Blocks\Block1KB.cs" />
     <Compile Include="NTFS\Files\Directory.cs" />
+    <Compile Include="NTFS\Files\SerializationFile.cs" />
     <Compile Include="NTFS\Streams\BlockStream.cs" />
     <Compile Include="NTFS\Files\File.cs" />
     <Compile Include="NTFS\Files\IFile.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="NTFS\Blocks\MemoryBlock.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Serializer.cs" />
     <Compile Include="Utils.cs" />
     <EmbeddedResource Include="EditForm.resx">
       <DependentUpon>EditForm.cs</DependentUpon>

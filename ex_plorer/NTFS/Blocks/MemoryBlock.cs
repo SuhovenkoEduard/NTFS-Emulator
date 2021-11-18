@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 
 namespace ex_plorer.NTFS
 {
+    [Serializable]
     public class MemoryBlock
     {
         public int SizeInB { get; }
         public int SizeInKB { get => SizeInB / 1024; }
-        protected string data;
+        public string data;
+
+        public MemoryBlock() { }
 
         public MemoryBlock(int sizeInB, string data = "")
         {

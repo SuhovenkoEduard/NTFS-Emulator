@@ -6,9 +6,14 @@ using System.Threading.Tasks;
 
 namespace ex_plorer.NTFS
 {
+    [Serializable]
     public class BlockStream
     {
-        protected List<Block1KB> blocks;
+        public List<Block1KB> blocks;
+        public BlockStream() 
+        {
+            blocks = new List<Block1KB>();
+        }
         public BlockStream(List<Block1KB> blocks = null)
         {
             this.blocks = blocks == null? blocks : new List<Block1KB>();

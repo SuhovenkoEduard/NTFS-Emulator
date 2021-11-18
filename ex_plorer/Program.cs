@@ -1,8 +1,11 @@
 ﻿using ex_plorer.NTFS;
+using ex_plorer.NTFS.Files;
 using System;
-using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
+using System.Xml.Serialization;
 
 namespace ex_plorer
 {
@@ -18,9 +21,12 @@ namespace ex_plorer
             Application.VisualStyleState = VisualStyleState.NoneEnabled;
             Application.SetCompatibleTextRenderingDefault(false);
 
+            string restorePath = "../../../Files.xml";
             string driveName = "C:";
             string path = driveName + "\\";
             MasterFileTable MFT = new MasterFileTable(100, driveName);
+            Serializer serializer = new Serializer(MFT, restorePath);
+            MFT.files = serializer.Deserialize();
 
             EditForm editForm = new EditForm("input.txt", "hkgfhjfhjflghkfgh \t");
             //editForm.Show();
