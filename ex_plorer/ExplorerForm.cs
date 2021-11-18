@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using ex_plorer.Properties;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
 using ex_plorer.NTFS;
+using ex_plorer.NTFS.Files;
 
 namespace ex_plorer
 {
@@ -32,67 +32,34 @@ namespace ex_plorer
             SetUpUI(showStatusBar, viewMode);
             Init(path);
         }
-        
         private void Init(string path)
         {
             Icon = Resources.dir;
             Text = path;
-            
             this.Manager = new DirManager(MFT, path);
             folderView.LargeImageList = Manager.LargeIcons;
             folderView.SmallImageList = Manager.SmallIcons;
-
-            //TODO: Clipboard
-            //TODO: Drag and drop
-
             GetAllFiles();
         }
-
+        // [+]
         private void GetAllFiles()
         {
             itemsCount.Text = "Please wait...";
             ListViewItem[] items = Manager.GetAllFiles().ToArray();
             folderView.Items.Clear();
             folderView.Items.AddRange(items);
-
             itemsCount.Text = $"{folderView.Items.Count} object(s)";
         }
-
+        // [+]
         private MenuItem[] GetDrivesMenu()
         {
-            MenuItem[] items = new MenuItem[DirManager.Drives.Length];
-            for (int i = 0; i < DirManager.Drives.Length; i++)
-            {
-                DriveInfo drive = DirManager.Drives[i];
-                if (!drive.IsReady) continue;
-
-                string label = drive.VolumeLabel;
-                if (string.IsNullOrEmpty(label))
-                {
-                    switch (drive.DriveType)
-                    {
-                        case DriveType.Removable:
-                            label = "Removable Disk";
-                            break;
-                        case DriveType.Fixed:
-                            label = "Local Disk";
-                            break;
-                        case DriveType.Network:
-                            label = "Network Drive";
-                            break;
-                        case DriveType.CDRom:
-                            label = "CD-ROM Drive";
-                            break;
-                    }
-                }
-                MenuItem item = new MenuItem($"{label} ({drive.Name})", GoToDirFromMenu);
-                item.Tag = drive.Name;
-
-                items[i] = item;
-            }
+            MenuItem[] items = new MenuItem[1];
+            MenuItem item = new MenuItem("C:\\", GoToDirFromMenu);
+            item.Tag = "C:\\";
+            items[0] = item;
             return items;
         }
-
+        // [+]
         private void SetUpUI(bool showStatusBar, View viewMode)
         {
             itemsCount = new StatusBarPanel();
@@ -155,6 +122,7 @@ namespace ex_plorer
 
             MenuItem fileMenu = new MenuItem("&File", new[]
             {
+                new MenuItem("&New File", TriggerNewFile),
                 new MenuItem("&New Folder", TriggerNewFolder),
                 new MenuItem("-"),
                 deleteItem,
@@ -173,17 +141,9 @@ namespace ex_plorer
                 goMenu,
             });
         }
-
-        private void ChangePath(string path)
-        {
-            Init(path);
-            /*ExplorerForm form = new ExplorerForm(path, statusBar.Visible, folderView.View);
-            form.StartPosition = FormStartPosition.Manual;
-            form.Location = this.Location;
-            form.Show();
-            this.Close();*/
-        }
-
+        // [+]
+        private void ChangePath(string path) => Init(path);
+        // [+]
         private EventHandler ToggleFolderViewMode(View view)
         {
             return (sender, e) =>
@@ -197,7 +157,7 @@ namespace ex_plorer
                 ((MenuItem) sender).Checked = true;
             };
         }
-
+        // [+]
         private void SelectAll(object sender, EventArgs e)
         {
             foreach (ListViewItem item in folderView.Items)
@@ -205,32 +165,32 @@ namespace ex_plorer
                 item.Selected = true;
             }
         }
-
+        // 
+        private void TriggerNewFile(object sender, EventArgs e)
+        {
+            folderView.SelectedItems.Clear();
+            string baseName = "New file";
+            File file = MFT.CreateFile(baseName, "", Manager.CurrentDir);
+            ListViewItem newItem = Manager.GetFileItem(file);
+            folderView.Items.Add(newItem);
+            newItem.Selected = true;
+            newItem.BeginEdit();
+        }
+        // [+]
         private void TriggerNewFolder(object sender, EventArgs e)
         {
             folderView.SelectedItems.Clear();
-
             string baseName = "New folder";
-            string dirPath = Path.Combine(Manager.CurrentDir.GetFilePath(), baseName);
-
-            int counter = 0;
-            while (Directory.Exists(dirPath))
-            {
-                counter++;
-                dirPath = Path.Combine(Manager.CurrentDir.GetFilePath(), baseName + $" ({counter})");
-            }
-
-            NTFS.Files.Directory directory = (NTFS.Files.Directory) MFT.CreateDirectory(baseName, Manager.CurrentDir);
-
+            Directory directory = MFT.CreateDirectory(baseName, Manager.CurrentDir);
             ListViewItem newItem = Manager.GetDirItem(directory);
             folderView.Items.Add(newItem);
             newItem.Selected = true;
             newItem.BeginEdit();
         }
-
+        // 
         private void TriggerCopy(object sender, EventArgs e)
         {
-            if (folderView.SelectedItems.Count == 0) return;
+            /*if (folderView.SelectedItems.Count == 0) return;
 
             StringCollection fileNames = new StringCollection();
             foreach (ListViewItem item in folderView.SelectedItems)
@@ -239,9 +199,9 @@ namespace ex_plorer
                 fileNames.Add(info.FullName);
             }
 
-            Clipboard.SetFileDropList(fileNames);
+            Clipboard.SetFileDropList(fileNames);*/
         }
-
+        // 
         private void TriggerPaste(object sender, EventArgs e)
         {
             /*if (!Clipboard.ContainsFileDropList()) return;
@@ -269,7 +229,7 @@ namespace ex_plorer
                 }
             }*/
         }
-
+        // [+]
         private void TriggerDelete(object sender, EventArgs e)
         {
             int count = folderView.SelectedItems.Count;
@@ -282,20 +242,12 @@ namespace ex_plorer
 
             foreach (ListViewItem item in folderView.SelectedItems)
             {
-                FileSystemInfo info = (FileSystemInfo)item.Tag;
-                if (info is FileInfo file)
-                {
-                    file.Delete();
-                }
-                else if (info is DirectoryInfo dir)
-                {
-                    dir.Delete(true);
-                }
-
+                NTFS.Files.IFile info = (NTFS.Files.IFile) item.Tag;
                 folderView.Items.Remove(item);
+                MFT.RemoveFile(info.GetFilePath());
             }
         }
-
+        // [+]
         private void TriggerRename(object sender, EventArgs e)
         {
             if (folderView.SelectedItems.Count == 0) return;
@@ -303,7 +255,7 @@ namespace ex_plorer
             ListViewItem item = folderView.SelectedItems[0];
             item.BeginEdit();
         }
-
+        // [+]
         private void UpdateSelectionDependentMenu(object sender, EventArgs e)
         {
             bool enabled = folderView.SelectedItems.Count > 0;
@@ -312,7 +264,7 @@ namespace ex_plorer
                 item.Enabled = enabled;
             }
         }
-
+        // [+]
         private void UpdateClipboardDependentMenu(object sender, EventArgs e)
         {
             bool enabled = Clipboard.ContainsFileDropList();
@@ -321,29 +273,25 @@ namespace ex_plorer
                 item.Enabled = enabled;
             }
         }
-
-        private void RefreshWindow(object sender, EventArgs e)
-        {
-            folderView.Items.Clear();
-            GetAllFiles();
-        }
-
+        // [+]
+        private void RefreshWindow(object sender, EventArgs e) => GetAllFiles();
+        // [+]
         private void UpOneLevel(object sender, EventArgs e)
         {
             if (Manager.CurrentDir.Parent == null) return;
             ChangePath(Manager.CurrentDir.Parent.GetFilePath());
         }
-
+        // [+]
         private void GoToDirFromMenu(object sender, EventArgs e)
         {
             MenuItem item = (MenuItem)sender;
             string path = (string)item.Tag;
             ChangePath(path);
         }
-
+        // [+]
         private void GoToPrompt(object sender, EventArgs e)
         {
-            GotoForm goTo = new GotoForm();
+            GotoForm goTo = new GotoForm(MFT);
             goTo.ShowDialog();
 
             if (goTo.DialogResult != DialogResult.OK) return;
@@ -355,14 +303,14 @@ namespace ex_plorer
 
             ChangePath(goTo.Result);
         }
-
+        // [+]
         private void ToggleStatusBar(object sender, EventArgs e)
         {
             if (statusBar.Visible) statusBar.Hide();
             else statusBar.Show();
             ((MenuItem)sender).Checked = statusBar.Visible;
         }
-
+        // [+]
         private void FolderView_ItemActivate(object sender, EventArgs e)
         {
             if (folderView.SelectedItems.Count == 0) return;
@@ -398,13 +346,13 @@ namespace ex_plorer
                 ChangePath(dir.GetFilePath());
             }
         }
-
+        // [+]
         private void ExplorerForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (Application.OpenForms.Count == 0)
                 Application.Exit();
         }
-
+        // [+]
         private void FolderView_AfterLabelEdit(object sender, LabelEditEventArgs e)
         {
             ListViewItem item = folderView.Items[e.Item];
@@ -415,19 +363,15 @@ namespace ex_plorer
                 return;
             }
 
-            var info = item.Tag;
-
-            if (info is NTFS.Files.File file)
-            {
+            IFile info = (IFile) item.Tag;
+            if (info is File file)
                 MFT.RenameFile(file.GetFilePath(), Manager.CurrentDir.GetFilePath() + newName);
-                item.ImageKey = Manager.GetIconKey(file);
-            }
-            else if (info is NTFS.Files.Directory dir)
-            {
+            else if (info is Directory dir)
                 MFT.RenameFile(dir.GetFilePath(), Manager.CurrentDir.GetFilePath() + newName + "\\");
-            }
+            RefreshWindow(null, null);
+            folderView.Update();
         }
-
+        // [+]
         private void FolderView_SelectedIndexChanged(object sender, EventArgs e)
         {
             bool enabled = folderView.SelectedItems.Count > 0;

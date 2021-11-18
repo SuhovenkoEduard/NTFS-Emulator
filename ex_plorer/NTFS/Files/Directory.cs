@@ -11,31 +11,23 @@ namespace ex_plorer.NTFS.Files
         public MasterFileTable MFT { get; }
         public IFile Parent { get; set; }
         public string FileName { get; set; }
-        public string FilePath { get; private set; }
         public string FileExtension { get; }
+        public string FilePath { get; private set; }
         public string LastModify { get; private set; }
-        protected Dictionary<string, BlockStream> streams;
 
+        protected Dictionary<string, BlockStream> streams;
         protected List<IFile> childs;
 
         public Directory(MasterFileTable MFT, string fileName, IFile parent = null)
         {
             this.MFT = MFT;
+            this.Parent = parent;
             this.FileName = fileName;
             this.FileExtension = "";
-            this.Parent = parent;
+            this.FilePath = GetFilePath();
+            this.LastModify = DateTime.UtcNow.ToString();
             this.streams = new Dictionary<string, BlockStream>();
             this.childs = new List<IFile>();
-        }
-
-        ~Directory()
-        {
-            if (Parent != null)
-            {
-                List<IFile> parentChilds = Parent.GetChilds().ToList();
-                parentChilds.Remove(this);
-                Parent.SetChilds(parentChilds);
-            }
         }
 
 

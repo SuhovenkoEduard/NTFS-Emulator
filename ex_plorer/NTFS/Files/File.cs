@@ -6,38 +6,35 @@ using System.Threading.Tasks;
 
 namespace ex_plorer.NTFS.Files
 {
-    class File : IFile
+    public class File : IFile
     {
         public MasterFileTable MFT { get; }
         public IFile Parent { get; set; }
-        public string FileName { get; }
+        public string FileName { get; set; }
+        public string FileExtension { get; set; }
         public string FilePath { get; private set; }
-        public string FileExtension { get; }
         public string LastModify { get; private set; }
 
         protected Dictionary<string, BlockStream> streams;
         public File(MasterFileTable MFT, string fileName, string fileExtension = "", IFile parent = null)
         {
             this.MFT = MFT;
+            this.Parent = parent;
             this.FileName = fileName;
             this.FileExtension = fileExtension;
-            this.Parent = parent;
+            this.FilePath = GetFilePath();
+            this.LastModify = DateTime.UtcNow.ToString();
+            this.streams = new Dictionary<string, BlockStream>();
         }
-
-        ~File()
-        {
-            if (Parent != null)
-            {
-                List<IFile> parentChilds = Parent.GetChilds().ToList();
-                parentChilds.Remove(this);
-                Parent.SetChilds(parentChilds);
-            }
-        }
-
 
         // by interface
         public void SetFilePath(string newFilePath)
         {
+            var fileNameAndExtension = newFilePath.Substring(newFilePath.LastIndexOf('\\') + 1);
+            var splitted = fileNameAndExtension.Split('.');
+            var hasExt = fileNameAndExtension.Any(x => x == '.');
+            FileName = (hasExt? splitted.First() : fileNameAndExtension);
+            FileExtension = (hasExt? splitted.Last() : "");
             FilePath = newFilePath;
             Parent = MFT.GetParentDir(FilePath);
         }
@@ -45,7 +42,7 @@ namespace ex_plorer.NTFS.Files
         public IFile GetParent() => Parent;
         public string GetFileName() => FileName;
         public string GetFilePath() =>
-            $"{Parent?.GetFilePath()}${FileName}.${FileExtension}";
+            $"{Parent?.GetFilePath()}{FileName}{(string.IsNullOrEmpty(FileExtension)? "" : "." + FileExtension)}";
         public string GetFileExtension() => FileExtension;
         public int GetFileSize()
         {

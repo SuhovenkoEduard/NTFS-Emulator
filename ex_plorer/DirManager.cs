@@ -3,7 +3,6 @@ using ex_plorer.NTFS.Files;
 using ex_plorer.Properties;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -16,13 +15,10 @@ namespace ex_plorer
         private const string DirIcon = "$dir";
         private const string FileIcon = "$file";
 
-        internal static DriveInfo[] Drives { get; } = DriveInfo.GetDrives();
-
-        private string Path;
-        public NTFS.Files.Directory CurrentDir;
-
-        internal static Dictionary<string, IconPair> IconDictionary { get; } = new Dictionary<string, IconPair>();
-
+        //internal static DriveInfo[] Drives { get; } = DriveInfo.GetDrives();
+        
+        public Directory CurrentDir;
+        
         internal ImageList LargeIcons { get; }
         internal ImageList SmallIcons { get; }
 
@@ -31,8 +27,7 @@ namespace ex_plorer
         internal DirManager(MasterFileTable MFT, string path)
         {
             this.MFT = MFT;
-            Path = path;
-            CurrentDir = (NTFS.Files.Directory) MFT.GetFile(path);
+            CurrentDir = (Directory) MFT.GetFile(path);
 
             // icons
             IconsSet = new List<string>();
@@ -67,11 +62,11 @@ namespace ex_plorer
                 ListViewItem item = null;
                 bool isDirectory = false;
 
-                if (iFile is NTFS.Files.File file)
+                if (iFile is File file)
                 {
                     item = GetFileItem(file);
                 }
-                else if (iFile is NTFS.Files.Directory dir)
+                else if (iFile is Directory dir)
                 {
                     item = GetDirItem(dir);
                     isDirectory = true;
@@ -83,7 +78,7 @@ namespace ex_plorer
             return items;
         }
 
-        internal ListViewItem GetFileItem(NTFS.Files.File file)
+        internal ListViewItem GetFileItem(File file)
         {
             ListViewItem item = new ListViewItem(file.GetFileName());
             item.SubItems.AddRange(new[]
@@ -92,13 +87,13 @@ namespace ex_plorer
                 $"{file.GetFileExtension()} File",
                 file.GetLastModify()
             });
-            item.ImageKey = GetIconKey(file);
+            item.ImageKey = FileIcon;
             item.Tag = file;
 
             return item;
         }
 
-        internal ListViewItem GetDirItem(NTFS.Files.Directory dir)
+        internal ListViewItem GetDirItem(Directory dir)
         {
             ListViewItem item = new ListViewItem(dir.GetFileName());
             item.SubItems.AddRange(new[] {"", "Directory", dir.GetLastModify()});
@@ -106,42 +101,6 @@ namespace ex_plorer
             item.Tag = dir;
 
             return item;
-        }
-
-        internal string GetIconKey(NTFS.Files.File file)
-        {
-            string key;
-            string ext = file.GetFileExtension();
-            
-            key = ext;
-            if (!IconsSet.Contains(key))
-            {
-                ExtractIcon(key, file.GetFilePath());
-            }
-
-            return key;
-        }
-
-        private void ExtractIcon(string key, string path)
-        {
-            IconsSet.Add(key);
-
-            Icon smallIcon, largeIcon;
-
-            if (IconDictionary.TryGetValue(key, out IconPair icons))
-            {
-                smallIcon = icons.Small;
-                largeIcon = icons.Large;
-            }
-            else
-            {
-                //TODO: type names
-                string typeName = NativeIcon.GetIconsAndTypeName(path, out smallIcon, out largeIcon);
-                IconDictionary.Add(key, new IconPair(smallIcon, largeIcon));
-            }
-
-            LargeIcons.Images.Add(key, largeIcon);
-            SmallIcons.Images.Add(key, smallIcon);
         }
     }
 

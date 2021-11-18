@@ -28,18 +28,33 @@ namespace ex_plorer.NTFS
             };
         }
         
-
-        public IFile CreateFile(string fileName, string fileExtension = "", IFile parent = null)
+        public string GetUndefinedFileNameByDir(string fileName, string fileExtension, bool isDirectory, IFile parent = null)
         {
-            IFile newFile = new File(this, fileName, fileExtension, parent);
+            string undefinedFileName = fileName;
+            string defaultPath = (parent == null ? "" : parent.GetFilePath());
+            string extWithDot = (string.IsNullOrEmpty(fileExtension) ? "" : "." + fileExtension);
+            string dirPath = defaultPath + fileName + (isDirectory? "\\" : extWithDot);
+            int counter = 0;
+            while (Exists(dirPath))
+            {
+                counter++;
+                dirPath = defaultPath + fileName + $" ({counter})" + (isDirectory? "\\" : extWithDot);
+                undefinedFileName = fileName + $" ({counter})";
+            }
+            return undefinedFileName;
+        }
+        public File CreateFile(string fileName, string fileExtension = "", IFile parent = null)
+        {
+            string undefinedFileName = GetUndefinedFileNameByDir(fileName, fileExtension, false, parent);
+            File newFile = new File(this, undefinedFileName, fileExtension, parent);
             parent?.SetChilds(parent?.GetChilds().Append(newFile));
             files.Add(newFile);
             return newFile;
         }
-
-        public IFile CreateDirectory(string directoryName, IFile parent = null)
+        public Directory CreateDirectory(string directoryName, IFile parent = null)
         {
-            IFile newDirectory = new Directory(this, directoryName, parent);
+            string undefinedFileName = GetUndefinedFileNameByDir(directoryName, "", true, parent);
+            Directory newDirectory = new Directory(this, undefinedFileName, parent);
             parent?.SetChilds(parent?.GetChilds().Append(newDirectory));
             files.Add(newDirectory);
             return newDirectory;
@@ -52,20 +67,30 @@ namespace ex_plorer.NTFS
             if (fromPath == toPath) return currentFile;
             return currentFile.Clone(toDir);            
         }
-
         public bool RenameFile(string oldFilePath, string newFilePath)
         {
+            string correctNewPosition = newFilePath;
+            if (files.Any(file => file.GetFilePath() == newFilePath))
+            {
+                IFile file = GetFile(newFilePath);
+                string fileName = file.GetFileName();
+                string fileExtension = file.GetFileExtension();
+                string extWithDot = (string.IsNullOrEmpty(fileExtension) ? "" : "." + fileExtension);
+                IFile parent = file.GetParent();
+                bool isDirectory = (file is Directory);
+                string undefinedFileName = GetUndefinedFileNameByDir(fileName, fileExtension, isDirectory, parent);
+                correctNewPosition = (parent == null ? "" : parent.GetFilePath()) + undefinedFileName 
+                    + (isDirectory ? "\\" : extWithDot);
+            }
+            
             if (files.Any(file => file.GetFilePath() == oldFilePath))
             {
-                files
-                    .Where(file => file.GetFilePath() == oldFilePath)
-                    .ToList()
-                    .ForEach(file => file.SetFilePath(newFilePath));
+                files.Find(file => file.GetFilePath() == oldFilePath).SetFilePath(correctNewPosition);
                 return true;
             }
             else
             {
-                MessageBox.Show("Файл для удаления не найден.");
+                MessageBox.Show("Файл для перемеименования не найден.");
                 return false;
             }
         }
@@ -73,7 +98,18 @@ namespace ex_plorer.NTFS
         {
             if (files.Any(file => file.GetFilePath() == filePath))
             {
-                files.RemoveAll(file => file.GetFilePath() == filePath);
+                IFile toRemove = files.Find(file => file.GetFilePath() == filePath);
+                toRemove.GetChilds().ToList().ForEach(file => this.RemoveFile(file.GetFilePath()));
+                
+                IFile parent = toRemove.GetParent();
+                if (parent != null)
+                {
+                    List<IFile> parentChilds = parent.GetChilds().ToList();
+                    parentChilds.Remove(toRemove);
+                    parent.SetChilds(parentChilds);
+                }
+
+                files.Remove(toRemove);
                 return true;
             } else
             {
@@ -111,5 +147,8 @@ namespace ex_plorer.NTFS
             busyMemory.AddRange(allocatedMemory);
             return allocatedMemory;
         }
+
+        public bool IsPathRooted(string path) => (files[0].GetFilePath() == path);
+        public bool Exists(string path) => (GetFile(path) != null);
     }
 }
