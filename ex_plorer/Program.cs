@@ -19,8 +19,11 @@ namespace ex_plorer
 
             string path = args.Length > 0 ? args[0] : Directory.GetCurrentDirectory();
 
+            EditForm editForm = new EditForm("input.txt", "hkgfhjfhjflghkfgh \t");
+            editForm.Show();
+
             ExplorerForm form = new ExplorerForm(path);
-            form.Show();
+            //form.Show();
 
             Application.Run();
         }
