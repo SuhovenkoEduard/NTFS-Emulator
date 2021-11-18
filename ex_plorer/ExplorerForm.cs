@@ -8,11 +8,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
+using ex_plorer.NTFS;
 
 namespace ex_plorer
 {
     public partial class ExplorerForm : Form
     {
+        private MasterFileTable MFT;
         private DirManager Manager { get; set; }
 
         private StatusBar statusBar;
@@ -23,19 +25,20 @@ namespace ex_plorer
         private List<MenuItem> clipboardDependentItems = new List<MenuItem>();
 
 
-        public ExplorerForm(string path, bool showStatusBar = true, View viewMode = View.LargeIcon)
+        public ExplorerForm(MasterFileTable MFT, string path, bool showStatusBar = true, View viewMode = View.LargeIcon)
         {
+            this.MFT = MFT;
             InitializeComponent();
             SetUpUI(showStatusBar, viewMode);
             Init(path);
         }
-
+        
         private void Init(string path)
         {
             Icon = Resources.dir;
             Text = path;
             
-            this.Manager = new DirManager(path);
+            this.Manager = new DirManager(MFT, path);
             folderView.LargeImageList = Manager.LargeIcons;
             folderView.SmallImageList = Manager.SmallIcons;
 
@@ -370,7 +373,21 @@ namespace ex_plorer
 
             if (info is FileInfo file)
             {
-                Process.Start(file.FullName);
+                try
+                {
+                    using (var fileStream = new FileStream(file.FullName, FileMode.OpenOrCreate))
+                    {
+                        byte[] array = new byte[fileStream.Length];
+                        fileStream.Read(array, 0, array.Length);
+                        string textFromFile = System.Text.Encoding.Default.GetString(array);
+                        EditForm editForm = new EditForm(file.Name, textFromFile, true);
+                        editForm.ShowDialog();
+                    }
+                } catch (Exception exception)
+                {
+                    MessageBox.Show("Не удалось открыть файл: " + exception.Message);
+                }
+                //Process.Start(file.FullName);
             }
             else if (info is DirectoryInfo dir)
             {

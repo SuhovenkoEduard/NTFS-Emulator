@@ -63,7 +63,7 @@ namespace ex_plorer
             this.SavedLabel.AutoSize = true;
             this.SavedLabel.BackColor = System.Drawing.Color.Transparent;
             this.SavedLabel.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.SavedLabel.Location = new System.Drawing.Point(113, 19);
+            this.SavedLabel.Location = new System.Drawing.Point(137, 21);
             this.SavedLabel.Name = "SavedLabel";
             this.SavedLabel.Size = new System.Drawing.Size(18, 19);
             this.SavedLabel.TabIndex = 1;

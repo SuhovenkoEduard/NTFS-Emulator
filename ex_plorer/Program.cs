@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ex_plorer.NTFS;
+using System;
 using System.IO;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
@@ -17,13 +18,14 @@ namespace ex_plorer
             Application.VisualStyleState = VisualStyleState.NoneEnabled;
             Application.SetCompatibleTextRenderingDefault(false);
 
-            string path = args.Length > 0 ? args[0] : Directory.GetCurrentDirectory();
+            string path = args.Length > 0 ? args[0] : "C:\\";
+            MasterFileTable MFT = new MasterFileTable(100, path);
 
             EditForm editForm = new EditForm("input.txt", "hkgfhjfhjflghkfgh \t");
-            editForm.Show();
+            //editForm.Show();
 
-            ExplorerForm form = new ExplorerForm(path);
-            //form.Show();
+            ExplorerForm form = new ExplorerForm(MFT, path);
+            form.Show();
 
             Application.Run();
         }

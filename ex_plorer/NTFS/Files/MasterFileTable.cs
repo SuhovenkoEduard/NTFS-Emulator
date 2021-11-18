@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ex_plorer.NTFS.Files;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,15 +18,20 @@ namespace ex_plorer.NTFS
         public int BusyBlocks => busyMemory.Count;
         public int AllBlocks => FreeBlocks + BusyBlocks;
 
-        public MasterFileTable(int sizeInBlocks = 100)
+        public MasterFileTable(int sizeInBlocks = 100, string diskName = "C:\\")
         {
             freeMemory = new List<Block1KB>(sizeInBlocks);
             busyMemory = new List<Block1KB>();
+            files = new List<IFile>
+            {
+                new Directory(this, diskName, null)
+            };
         }
         
 
-        public IFile CreateFile(string fileName, string fileExtension = "", IFile parent = null) 
-            => new File(this, fileName, fileExtension, parent);
+        public IFile CreateFile(string fileName, string fileExtension = "", IFile parent = null)
+           => new File(this, fileName, fileExtension, parent);
+
 
         public IFile CopyFile(string fromPath, string toPath)
         {
@@ -63,11 +69,11 @@ namespace ex_plorer.NTFS
                 return false;
             }
         }
-        public IFile GetDir(string filePath)
+        public Directory GetDir(string filePath)
         {
             string dirPath =
-                filePath.Substring(0, filePath.LastIndexOf('\\'));
-            return files.Find(file => file.GetFilePath() == dirPath);
+                filePath.Substring(0, filePath.LastIndexOf('\\')) + "\\";
+            return (Directory) files.Find(file => file.GetFilePath() == dirPath);
         }
 
         // memory

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ex_plorer.NTFS.Files
 {
-    class Directory : IFile
+    public class Directory : IFile
     {
         public MasterFileTable MFT { get; }
         public IFile Parent { get; set; }

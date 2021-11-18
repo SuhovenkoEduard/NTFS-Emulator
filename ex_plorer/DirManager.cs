@@ -1,7 +1,8 @@
-﻿using ex_plorer.Properties;
+﻿using ex_plorer.NTFS;
+using ex_plorer.NTFS.Files;
+using ex_plorer.Properties;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -9,13 +10,15 @@ namespace ex_plorer
 {
     internal class DirManager
     {
+        private MasterFileTable MFT;
+
         private const string DirIcon = "$dir";
         private const string FileIcon = "$file";
 
-        internal static DriveInfo[] Drives { get; } = DriveInfo.GetDrives();
+        //internal static DriveInfo[] Drives { get; } = DriveInfo.GetDrives();
 
-        private string Path { get; }
-        internal DirectoryInfo CurrentDir { get; }
+        private string Path;
+        public Directory CurrentDir;
 
         internal static Dictionary<string, IconPair> IconDictionary { get; } = new Dictionary<string, IconPair>();
 
@@ -24,13 +27,14 @@ namespace ex_plorer
 
         internal List<string> IconsSet { get; }
 
-        internal DirManager(string path)
+        internal DirManager(MasterFileTable MFT, string path)
         {
+            this.MFT = MFT;
             Path = path;
-            CurrentDir = new DirectoryInfo(path);
+            CurrentDir = MFT.GetDir(path);
 
+            // icons
             IconsSet = new List<string>();
-
             LargeIcons = new ImageList
             {
                 ImageSize = new Size(32, 32),
@@ -41,7 +45,6 @@ namespace ex_plorer
                     { FileIcon, new Icon(Resources.file, 32, 32) }
                 }
             };
-
             SmallIcons = new ImageList
             {
                 ImageSize = new Size(16, 16),
@@ -58,17 +61,16 @@ namespace ex_plorer
         //TODO: This is slow, use Win32 function calls instead of DirectoryInfo
         internal IEnumerable<ListViewItem> GetAllFiles()
         {
-            IEnumerable<ListViewItem> items = CurrentDir.EnumerateFileSystemInfos().Select(info =>
+            IEnumerable<ListViewItem> items = CurrentDir.GetChilds().Select(iFile =>
             {
                 ListViewItem item = null;
                 bool isDirectory = false;
 
-                if (info is FileInfo file)
+                if (iFile is File file)
                 {
                     item = GetFileItem(file);
-
                 }
-                else if (info is DirectoryInfo dir)
+                else if (iFile is Directory dir)
                 {
                     item = GetDirItem(dir);
                     isDirectory = true;
@@ -80,14 +82,14 @@ namespace ex_plorer
             return items;
         }
 
-        internal ListViewItem GetFileItem(FileInfo file)
+        internal ListViewItem GetFileItem(File file)
         {
-            ListViewItem item = new ListViewItem(file.Name);
+            ListViewItem item = new ListViewItem(file.GetFileName());
             item.SubItems.AddRange(new[]
             {
-                file.Length.FileSizeInKB(),
-                $"{file.Extension} File",
-                file.LastWriteTime.ToString()
+                (file.GetFileSize() / 1024).ToString(),
+                $"{file.GetFileExtension()} File",
+                file.GetLastModify()
             });
             item.ImageKey = GetIconKey(file);
             item.Tag = file;
@@ -95,25 +97,25 @@ namespace ex_plorer
             return item;
         }
 
-        internal ListViewItem GetDirItem(DirectoryInfo dir)
+        internal ListViewItem GetDirItem(Directory dir)
         {
-            ListViewItem item = new ListViewItem(dir.Name);
-            item.SubItems.AddRange(new[] {"", "Directory", dir.LastWriteTime.ToString()});
+            ListViewItem item = new ListViewItem(dir.GetFileName());
+            item.SubItems.AddRange(new[] {"", "Directory", dir.GetLastModify()});
             item.ImageKey = DirIcon;
             item.Tag = dir;
 
             return item;
         }
 
-        internal string GetIconKey(FileInfo file)
+        internal string GetIconKey(File file)
         {
             string key;
-            string ext = file.Extension;
+            string ext = file.GetFileExtension();
             
             key = ext;
             if (!IconsSet.Contains(key))
             {
-                ExtractIcon(key, file.FullName);
+                ExtractIcon(key, file.GetFilePath());
             }
 
             return key;
