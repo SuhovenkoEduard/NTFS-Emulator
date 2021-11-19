@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<ArrayOfSerializationFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SerializationFile>
+    <FileName>C:</FileName>
+    <FileExtension />
+    <FilePath>C:\</FilePath>
+    <LastModify>19.11.2021 09:46:37</LastModify>
+    <ParentPath />
+    <IsDirectory>true</IsDirectory>
+  </SerializationFile>
+  <SerializationFile>
+    <FileName>1</FileName>
+    <FileExtension />
+    <FilePath>C:\1</FilePath>
+    <LastModify>19.11.2021 09:46:40</LastModify>
+    <Stream>
+      <blocks />
+    </Stream>
+    <ParentPath>C:\</ParentPath>
+    <IsDirectory>false</IsDirectory>
+  </SerializationFile>
+  <SerializationFile>
+    <FileName>1 (1)</FileName>
+    <FileExtension />
+    <FilePath>C:\1 (1)</FilePath>
+    <LastModify>19.11.2021 10:13:13</LastModify>
+    <Stream>
+      <blocks />
+    </Stream>
+    <ParentPath>C:\</ParentPath>
+    <IsDirectory>false</IsDirectory>
+  </SerializationFile>
+  <SerializationFile>
+    <FileName>1</FileName>
+    <FileExtension />
+    <FilePath>C:\1\</FilePath>
+    <LastModify>19.11.2021 10:20:15</LastModify>
+    <ParentPath>C:\</ParentPath>
+    <IsDirectory>true</IsDirectory>
+  </SerializationFile>
+  <SerializationFile>
+    <FileName>1 (1)</FileName>
+    <FileExtension />
+    <FilePath>C:\1 (1)\</FilePath>
+    <LastModify>19.11.2021 10:20:19</LastModify>
+    <ParentPath>C:\</ParentPath>
+    <IsDirectory>true</IsDirectory>
+  </SerializationFile>
+</ArrayOfSerializationFile>

@@ -26,10 +26,8 @@ namespace ex_plorer
             string path = driveName + "\\";
             MasterFileTable MFT = new MasterFileTable(100, driveName);
             Serializer serializer = new Serializer(MFT, restorePath);
-            MFT.files = serializer.Deserialize();
-
-            EditForm editForm = new EditForm("input.txt", "hkgfhjfhjflghkfgh \t");
-            //editForm.Show();
+            if (System.IO.File.Exists(restorePath))
+                MFT.files = serializer.Deserialize();
 
             ExplorerForm form = new ExplorerForm(MFT, path);
             form.Show();

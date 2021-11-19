@@ -30,7 +30,7 @@ namespace ex_plorer
             
             try
             {
-                using (var fs = new System.IO.FileStream(Path, System.IO.FileMode.OpenOrCreate))
+                using (var fs = new System.IO.FileStream(Path, System.IO.FileMode.Create))
                     serializer.Serialize(fs, MFT.files
                         .Select(file =>
                         {
@@ -41,6 +41,7 @@ namespace ex_plorer
                             serializationFile.LastModify = file.GetLastModify();
                             serializationFile.Stream = file.GetStream();
                             serializationFile.IsDirectory = file is Directory;
+                            serializationFile.ParentPath = (file.GetParent() == null ? "" : file.GetParent().GetFilePath());
                             return serializationFile;
                         })
                         .ToList());
@@ -60,14 +61,43 @@ namespace ex_plorer
                     List<SerializationFile> serializationFiles = (List<SerializationFile>)serializer.Deserialize(fs);
                     result = serializationFiles.Select(file =>
                     {
-                        IFile fi;
                         if (file.IsDirectory)
-                            fi = new Directory(MFT, file.FileName, null);
+                        {
+                            Directory restoredDirectory = new Directory(MFT, file.FileName, null);
+                            restoredDirectory.FileName = file.FileName;
+                            restoredDirectory.FileExtension = file.FileExtension;
+                            restoredDirectory.FilePath = file.FilePath;
+                            restoredDirectory.LastModify = file.LastModify;
+                            return (IFile) restoredDirectory;
+                        }
                         else
-                            fi = new File(MFT, file.FileName, file.FileExtension, null);
-                        return fi;
-                    })
-                    .ToList();
+                        {
+                            File restoredFile = new File(MFT, file.FileName, file.FileExtension, null);
+                            restoredFile.FileName = file.FileName;
+                            restoredFile.FileExtension = file.FileExtension;
+                            restoredFile.FilePath = file.FilePath;
+                            restoredFile.LastModify = file.LastModify;
+                            restoredFile.stream = file.Stream;
+                            return (IFile) restoredFile;
+                        }
+                    }).ToList();
+
+                    for (int i = 0; i < serializationFiles.Count; ++i)
+                    {
+                        int parentIndex = serializationFiles
+                            .FindIndex(sf => sf.FilePath == serializationFiles[i].ParentPath);
+                        IFile parent = (parentIndex == -1? 
+                            null : result[parentIndex]);
+                        result[i].SetParent(parent);
+                    }
+
+                    result.Where(iFile => iFile is Directory dir)
+                        .ToList()
+                        .ForEach(dir =>
+                        {
+                            dir.SetChilds(result
+                                .Where(fff => fff.GetParent() == dir));
+                        });
                 }
             } catch (Exception exception)
             {

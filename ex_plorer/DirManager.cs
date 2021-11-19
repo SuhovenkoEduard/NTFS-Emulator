@@ -57,7 +57,7 @@ namespace ex_plorer
         //TODO: This is slow, use Win32 function calls instead of DirectoryInfo
         internal IEnumerable<ListViewItem> GetAllFiles()
         {
-            IEnumerable<ListViewItem> items = CurrentDir.GetChilds().Select(iFile =>
+            IEnumerable<ListViewItem> items = CurrentDir.GetChilds()?.Select(iFile =>
             {
                 ListViewItem item = null;
                 bool isDirectory = false;

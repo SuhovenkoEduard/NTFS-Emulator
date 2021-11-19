@@ -11,11 +11,10 @@ namespace ex_plorer.NTFS.Files
         public MasterFileTable MFT { get; }
         public IFile Parent { get; set; }
         public string FileName { get; set; }
-        public string FileExtension { get; }
-        public string FilePath { get; private set; }
-        public string LastModify { get; private set; }
+        public string FileExtension { get; set; }
+        public string FilePath { get; set; }
+        public string LastModify { get; set; }
 
-        public BlockStream stream;
         public List<IFile> childs;
 
         public Directory(MasterFileTable MFT, string fileName, IFile parent = null)
@@ -26,7 +25,6 @@ namespace ex_plorer.NTFS.Files
             this.FileExtension = "";
             this.FilePath = GetFilePath();
             this.LastModify = DateTime.UtcNow.ToString();
-            this.stream = new BlockStream();
             this.childs = new List<IFile>();
         }
 
@@ -40,7 +38,9 @@ namespace ex_plorer.NTFS.Files
         {
             FileName = newFilePath.Split('\\').Reverse().Skip(1).First();
             FilePath = newFilePath;
+            Parent?.RemoveChild(this);
             Parent = MFT.GetParentDir(FilePath);
+            Parent?.AddChild(this);
         }
         public string GetFileExtension() => FileExtension;
         public int GetFileSize() => GetChilds().Aggregate(0, (sum, x) => sum + x.GetFileSize());
@@ -54,12 +54,15 @@ namespace ex_plorer.NTFS.Files
         }
 
         public IFile GetParent() => this.Parent;
-        public IEnumerable<IFile> GetChilds() => this.childs;
-        public BlockStream GetStream() => this.stream;
-        public void SetStream(BlockStream stream) => this.stream = stream;
-
+        public void SetParent(IFile parent) => Parent = parent;
+        public BlockStream GetStream() => null;
+        public void SetStream(BlockStream stream) { }
         public void SetLastModify(string lastModify) => this.LastModify = lastModify;
 
-        public void SetChilds(IEnumerable<IFile> childs) => this.childs = childs.ToList();        
+        // childs
+        public IEnumerable<IFile> GetChilds() => this.childs;
+        public void SetChilds(IEnumerable<IFile> childs) => this.childs = childs.ToList();
+        public void AddChild(IFile child) => childs.Add(child);
+        public void RemoveChild(IFile child) => childs.Remove(child);
     }
 }

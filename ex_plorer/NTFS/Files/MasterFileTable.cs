@@ -49,7 +49,7 @@ namespace ex_plorer.NTFS
         {
             string undefinedFileName = GetUndefinedFileNameByDir(fileName, fileExtension, false, parent);
             File newFile = new File(this, undefinedFileName, fileExtension, parent);
-            parent?.SetChilds(parent?.GetChilds().Append(newFile));
+            parent?.AddChild(newFile);
             files.Add(newFile);
             return newFile;
         }
@@ -57,7 +57,7 @@ namespace ex_plorer.NTFS
         {
             string undefinedFileName = GetUndefinedFileNameByDir(directoryName, "", true, parent);
             Directory newDirectory = new Directory(this, undefinedFileName, parent);
-            parent?.SetChilds(parent?.GetChilds().Append(newDirectory));
+            parent?.AddChild(newDirectory);
             files.Add(newDirectory);
             return newDirectory;
         }
@@ -87,7 +87,8 @@ namespace ex_plorer.NTFS
             
             if (files.Any(file => file.GetFilePath() == oldFilePath))
             {
-                files.Find(file => file.GetFilePath() == oldFilePath).SetFilePath(correctNewPosition);
+                files.Find(file => file.GetFilePath() == oldFilePath)
+                    .SetFilePath(correctNewPosition);
                 return true;
             }
             else
@@ -101,16 +102,8 @@ namespace ex_plorer.NTFS
             if (files.Any(file => file.GetFilePath() == filePath))
             {
                 IFile toRemove = files.Find(file => file.GetFilePath() == filePath);
-                toRemove.GetChilds().ToList().ForEach(file => this.RemoveFile(file.GetFilePath()));
-                
-                IFile parent = toRemove.GetParent();
-                if (parent != null)
-                {
-                    List<IFile> parentChilds = parent.GetChilds().ToList();
-                    parentChilds.Remove(toRemove);
-                    parent.SetChilds(parentChilds);
-                }
-
+                toRemove.GetChilds()?.ToList().ForEach(file => this.RemoveFile(file.GetFilePath()));
+                toRemove.GetParent()?.RemoveChild(toRemove);
                 files.Remove(toRemove);
                 return true;
             } else

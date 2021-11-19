@@ -13,6 +13,7 @@ namespace ex_plorer.NTFS.Files
         public string FilePath { get; set; }
         public string LastModify { get; set; }
         public BlockStream Stream { get; set; }
+        public string ParentPath { get; set; }
         public bool IsDirectory { get; set; }
 
         public SerializationFile() { }

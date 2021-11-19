@@ -12,8 +12,8 @@ namespace ex_plorer.NTFS.Files
         public IFile Parent { get; set; }
         public string FileName { get; set; }
         public string FileExtension { get; set; }
-        public string FilePath { get; private set; }
-        public string LastModify { get; private set; }
+        public string FilePath { get; set; }
+        public string LastModify { get; set; }
 
         public BlockStream stream;
         
@@ -37,17 +37,19 @@ namespace ex_plorer.NTFS.Files
             FileName = (hasExt? splitted.First() : fileNameAndExtension);
             FileExtension = (hasExt? splitted.Last() : "");
             FilePath = newFilePath;
+            Parent?.RemoveChild(this);
             Parent = MFT.GetParentDir(FilePath);
+            Parent?.AddChild(this);
         }
         public BlockStream GetStream() => stream;
         public IFile GetParent() => Parent;
+        public void SetParent(IFile parent) => Parent = parent;
         public string GetFileName() => FileName;
         public string GetFilePath() =>
             $"{Parent?.GetFilePath()}{FileName}{(string.IsNullOrEmpty(FileExtension)? "" : "." + FileExtension)}";
         public string GetFileExtension() => FileExtension;
         public int GetFileSize() => stream.Size;
         public string GetLastModify() => LastModify;
-        public IEnumerable<IFile> GetChilds() => new List<IFile>();
         public void SetStream(BlockStream stream) => this.stream = stream;
         public IFile Clone(IFile parent = null)
         {
@@ -57,6 +59,11 @@ namespace ex_plorer.NTFS.Files
             return result;
         }
         public void SetLastModify(string lastModify) => this.LastModify = lastModify;
+        
+        // childs
+        public IEnumerable<IFile> GetChilds() => null;
         public void SetChilds(IEnumerable<IFile> childs) { }
+        public void AddChild(IFile child) { }
+        public void RemoveChild(IFile child) { }
     }
 }

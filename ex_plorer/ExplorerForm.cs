@@ -363,13 +363,19 @@ namespace ex_plorer
                 return;
             }
 
-            IFile info = (IFile) item.Tag;
+
+            IFile info = (IFile)item.Tag;
             if (info is File file)
                 MFT.RenameFile(file.GetFilePath(), Manager.CurrentDir.GetFilePath() + newName);
             else if (info is Directory dir)
                 MFT.RenameFile(dir.GetFilePath(), Manager.CurrentDir.GetFilePath() + newName + "\\");
-            RefreshWindow(null, null);
-            folderView.Update();
+            
+            if (e.Label != info.GetFileName())
+            {
+                e.CancelEdit = true;
+                item.Text = info.GetFileName();
+                FolderView_AfterLabelEdit(sender, new LabelEditEventArgs(item.Index));
+            }
         }
         // [+]
         private void FolderView_SelectedIndexChanged(object sender, EventArgs e)
