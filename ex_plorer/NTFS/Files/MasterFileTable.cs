@@ -23,6 +23,9 @@ namespace ex_plorer.NTFS
         public MasterFileTable(int sizeInBlocks = 100, string diskName = "C:")
         {
             freeMemory = new List<Block1KB>(sizeInBlocks);
+            for (int i = 0; i < sizeInBlocks; ++i)
+                freeMemory.Add(new Block1KB());
+
             busyMemory = new List<Block1KB>();
             files = new List<IFile>
             {
@@ -135,12 +138,17 @@ namespace ex_plorer.NTFS
             if (sizeInBlocks > FreeBlocks)
             {
                 MessageBox.Show("Недостаточно свободной памяти.");
-                return new List<Block1KB>();
+                return null;
             }
             List<Block1KB> allocatedMemory = freeMemory.Take(sizeInBlocks).ToList();
             freeMemory.RemoveRange(0, sizeInBlocks);
             busyMemory.AddRange(allocatedMemory);
             return allocatedMemory;
+        }
+        public void DeallocMemory(List<Block1KB> blocks)
+        {
+            blocks.ForEach(block => busyMemory.Remove(block));
+            blocks.ForEach(block => freeMemory.Add(block));
         }
 
         public bool IsPathRooted(string path) => (files[0].GetFilePath() == path);

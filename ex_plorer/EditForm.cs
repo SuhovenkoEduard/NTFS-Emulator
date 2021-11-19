@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ex_plorer.NTFS.Files;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -44,20 +45,35 @@ namespace ex_plorer
                 SavedLabel.Text = value ? "" : "*";
             }
         }
-        public EditForm(string fileName, string data = "", bool saved = false)
+        public File File { get; private set; }
+        
+        public EditForm(File file, bool saved = true)
         {
             InitializeComponent();
-            this.FileName = fileName;
-            this.Data = data;
+            this.FileName = file.GetFileName();
+            this.Data = file.Read();
             this.Saved = saved;
+            this.File = file;
             SetTabWidth(this.textBox1, 1);
         }
 
         public void SaveFile()
         {
-            Saved = true;
+            if (File.TryWrite(Data))
+            {
+                File.Write(Data);
+                Saved = true;
+            } else
+            {
+                MessageBox.Show("Не удалось сохранить файл.");
+                saved = false;
+            }
         }
-        private void textBox1_TextChanged(object sender, EventArgs e) => Saved = false;
+        private void textBox1_TextChanged(object sender, EventArgs e) 
+        {
+            Data = textBox1.Text;
+            Saved = false;
+        }
         public void KeyDownHandler(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.S && e.Control)

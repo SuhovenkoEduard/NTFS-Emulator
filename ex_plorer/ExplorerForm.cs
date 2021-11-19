@@ -316,14 +316,13 @@ namespace ex_plorer
             if (folderView.SelectedItems.Count == 0) return;
 
             ListViewItem item = folderView.SelectedItems[0];
-            NTFS.Files.IFile info = (NTFS.Files.IFile)item.Tag;
+            IFile info = (IFile)item.Tag;
 
-            if (info is NTFS.Files.File file)
+            if (info is File file)
             {
                 try
                 {
-                    string textFromFile = "";
-                    EditForm editForm = new EditForm(file.GetFileName(), textFromFile, true);
+                    EditForm editForm = new EditForm(file);
                     editForm.ShowDialog();
 
                     /*using (var fileStream = new FileStream(file.FullName, FileMode.OpenOrCreate))

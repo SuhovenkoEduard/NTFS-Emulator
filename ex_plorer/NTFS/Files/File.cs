@@ -28,6 +28,16 @@ namespace ex_plorer.NTFS.Files
             this.stream = new BlockStream();
         }
 
+        // data
+        public bool TryWrite(string data) => ((data.Length + Block1KB.SIZE - 1) / Block1KB.SIZE < MFT.freeMemory.Count * 1024);
+        public void Write(string data)
+        {
+            MFT.DeallocMemory(stream.blocks);
+            stream.blocks = MFT.AllocMemory((data.Length + Block1KB.SIZE - 1) / Block1KB.SIZE);
+            stream.WriteData(data);
+        }
+        public string Read() => stream.ReadData();
+
         // by interface
         public void SetFilePath(string newFilePath)
         {
