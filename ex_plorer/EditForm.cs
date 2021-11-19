@@ -78,6 +78,8 @@ namespace ex_plorer
         {
             if (e.KeyCode == Keys.S && e.Control)
                 SaveFile();
+            if (e.KeyCode == Keys.W && e.Control)
+                Close();
         }
         private void EditForm_KeyDown(object sender, KeyEventArgs e) => KeyDownHandler(sender, e);
         private void textBox1_KeyDown(object sender, KeyEventArgs e) => KeyDownHandler(sender, e);

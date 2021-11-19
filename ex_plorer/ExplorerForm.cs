@@ -14,6 +14,7 @@ namespace ex_plorer
 {
     public partial class ExplorerForm : Form
     {
+        private bool PUT_FLAG = false;
         private MasterFileTable MFT;
         private DirManager Manager { get; set; }
 
@@ -78,7 +79,7 @@ namespace ex_plorer
                 new MenuItem("-"),
                 new MenuItem("&Copy Path", (sender, e) => Clipboard.SetText(Text)),
                 new MenuItem("&Go To...", GoToPrompt, Shortcut.CtrlG),
-                new MenuItem("&Up One Level", UpOneLevel, Shortcut.CtrlU),
+                new MenuItem("&Up One Level", UpOneLevel, Shortcut.CtrlE),
             };
             MenuItem goMenu = new MenuItem("&Go", GetDrivesMenu());
             goMenu.MenuItems.AddRange(goItems);
@@ -100,6 +101,8 @@ namespace ex_plorer
             };
             viewMenu.MenuItems.AddRange(viewModeItems);
 
+            MenuItem putItem = new MenuItem("&Put", TriggerPut, Shortcut.CtrlX);
+            selectionDependentItems.Add(putItem);
             MenuItem copyItem = new MenuItem("&Copy", TriggerCopy, Shortcut.CtrlC);
             selectionDependentItems.Add(copyItem);
             MenuItem pasteItem = new MenuItem("&Paste", TriggerPaste, Shortcut.CtrlV);
@@ -109,6 +112,7 @@ namespace ex_plorer
             {
                 copyItem,
                 pasteItem,
+                putItem,
                 new MenuItem("-"),
                 new MenuItem("Select &All", SelectAll, Shortcut.CtrlA)
             });
@@ -122,13 +126,13 @@ namespace ex_plorer
 
             MenuItem fileMenu = new MenuItem("&File", new[]
             {
-                new MenuItem("&New File", TriggerNewFile),
-                new MenuItem("&New Folder", TriggerNewFolder),
+                new MenuItem("&New File", TriggerNewFile, Shortcut.CtrlF),
+                new MenuItem("&New Directory", TriggerNewFolder, Shortcut.CtrlD),
                 new MenuItem("-"),
                 deleteItem,
                 renameItem,
                 new MenuItem("-"),
-                new MenuItem("&Close", (sender, e) => Close()),
+                new MenuItem("&Close", (sender, e) => Close(), Shortcut.CtrlW),
             });
             fileMenu.Popup += UpdateSelectionDependentMenu;
 
@@ -187,47 +191,64 @@ namespace ex_plorer
             newItem.Selected = true;
             newItem.BeginEdit();
         }
-        // 
-        private void TriggerCopy(object sender, EventArgs e)
+        // [+]
+        private void CopyInClipboard()
         {
-            /*if (folderView.SelectedItems.Count == 0) return;
+            if (folderView.SelectedItems.Count == 0) return;
 
             StringCollection fileNames = new StringCollection();
             foreach (ListViewItem item in folderView.SelectedItems)
             {
-                FileSystemInfo info = (FileSystemInfo)item.Tag;
-                fileNames.Add(info.FullName);
+                IFile info = (IFile)item.Tag;
+                fileNames.Add(info.GetFilePath());
             }
 
-            Clipboard.SetFileDropList(fileNames);*/
+            Clipboard.SetFileDropList(fileNames);
         }
-        // 
+        // [+]
+        private void TriggerPut(object sender, EventArgs e)
+        {
+            CopyInClipboard();
+            PUT_FLAG = true;
+        }
+        // [+]
+        private void TriggerCopy(object sender, EventArgs e)
+        {
+            CopyInClipboard();
+            PUT_FLAG = false;
+        }
+        // [+]
         private void TriggerPaste(object sender, EventArgs e)
         {
-            /*if (!Clipboard.ContainsFileDropList()) return;
+            if (!Clipboard.ContainsFileDropList()) return;
 
             folderView.SelectedItems.Clear();
 
             StringCollection fileNames = Clipboard.GetFileDropList();
-            foreach (string path in fileNames)
+            foreach (string fromPath in fileNames)
             {
-                if (File.Exists(path))
+                IFile oldFile = MFT.GetFile(fromPath);
+                string toPath = Manager.CurrentDir.GetFilePath() + oldFile.GetFileNameExtension() + (oldFile is Directory? "\\" : "");
+                if (PUT_FLAG)
+                    MFT.RenameFile(fromPath, toPath);
+                else
+                    MFT.CopyFile(fromPath, toPath);
+                PUT_FLAG = false;                
+                IFile newFile = MFT.GetFile(toPath);
+                ListViewItem newItem;
+                if (oldFile is File)
                 {
-                    FileInfo source = new FileInfo(path);
-                    string targetPath = Path.Combine(Manager.CurrentDir.GetFilePath(), source.Name);
-                    source.CopyTo(targetPath, false);
-
-                    FileInfo target = new FileInfo(targetPath);
-                    ListViewItem newItem = Manager.GetFileItem(target);
+                    newItem = Manager.GetFileItem((File)newFile);
+                } else
+                {
+                    newItem = Manager.GetDirItem((Directory)newFile);
+                }
+                if (fromPath != toPath)
+                {
                     folderView.Items.Add(newItem);
                     newItem.Selected = true;
                 }
-                else if (Directory.Exists(path))
-                {
-                    //TODO: recursive directory pasting
-                    throw new NotImplementedException();
-                }
-            }*/
+            }
         }
         // [+]
         private void TriggerDelete(object sender, EventArgs e)

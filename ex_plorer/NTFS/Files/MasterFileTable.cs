@@ -67,10 +67,12 @@ namespace ex_plorer.NTFS
 
         public IFile CopyFile(string fromPath, string toPath)
         {
-            IFile currentFile = files.Find(file => file.GetFilePath() == fromPath);
+            IFile currentFile = GetFile(fromPath);
             IFile toDir = GetParentDir(toPath);
             if (fromPath == toPath) return currentFile;
-            return currentFile.Clone(toDir);            
+            IFile newFile = currentFile.Clone(toDir);
+            toDir?.AddChild(newFile);
+            return newFile;
         }
         public bool RenameFile(string oldFilePath, string newFilePath)
         {

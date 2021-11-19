@@ -19,14 +19,14 @@ namespace ex_plorer.NTFS
         
         public BlockStream(List<Block1KB> blocks = null)
         {
-            this.blocks = blocks == null? blocks : new List<Block1KB>();
+            this.blocks = blocks == null? new List<Block1KB>() : blocks;
         }
         
         public BlockStream Clone(MasterFileTable MFT) 
         {
             BlockStream stream = new BlockStream(MFT.AllocMemory(blocks.Count));
             for (int i = 0; i < blocks.Count; ++i)
-                stream.blocks[0].WriteSync(blocks[i]);
+                stream.blocks[i].WriteSync(blocks[i]);
             return stream;
         } 
 
