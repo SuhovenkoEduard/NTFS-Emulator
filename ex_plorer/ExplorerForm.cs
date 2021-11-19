@@ -229,6 +229,7 @@ namespace ex_plorer
             {
                 IFile oldFile = MFT.GetFile(fromPath);
                 string toPath = Manager.CurrentDir.GetFilePath() + oldFile.GetFileNameExtension() + (oldFile is Directory? "\\" : "");
+                if (fromPath == toPath) continue;
                 if (PUT_FLAG)
                     toPath = MFT.RenameFile(fromPath, toPath);
                 else
