@@ -74,7 +74,7 @@ namespace ex_plorer.NTFS
             toDir?.AddChild(newFile);
             return newFile;
         }
-        public bool RenameFile(string oldFilePath, string newFilePath)
+        public string RenameFile(string oldFilePath, string newFilePath)
         {
             string correctNewPosition = newFilePath;
             if (files.Any(file => file.GetFilePath() == newFilePath))
@@ -92,14 +92,14 @@ namespace ex_plorer.NTFS
             
             if (files.Any(file => file.GetFilePath() == oldFilePath))
             {
-                files.Find(file => file.GetFilePath() == oldFilePath)
-                    .SetFilePath(correctNewPosition);
-                return true;
+                IFile file = files.Find(iFile => iFile.GetFilePath() == oldFilePath);
+                file.SetFilePath(correctNewPosition);
+                return file.GetFilePath();
             }
             else
             {
                 MessageBox.Show("Файл для перемеименования не найден.");
-                return false;
+                return "";
             }
         }
         public bool RemoveFile(string filePath)

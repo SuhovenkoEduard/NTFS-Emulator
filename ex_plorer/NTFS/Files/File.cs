@@ -66,7 +66,8 @@ namespace ex_plorer.NTFS.Files
         public void SetStream(BlockStream stream) => this.stream = stream;
         public IFile Clone(IFile parent = null)
         {
-            IFile result = new File(MFT, FileName, FileExtension, parent);
+            string undefinedFileName = MFT.GetUndefinedFileNameByDir(FileName, FileExtension, false, parent);
+            IFile result = new File(MFT, undefinedFileName, "", parent);
             MFT.files.Add(result);
             BlockStream clonedStream = stream.Clone(MFT);
             result.SetStream(clonedStream);

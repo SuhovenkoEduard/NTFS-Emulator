@@ -230,10 +230,9 @@ namespace ex_plorer
                 IFile oldFile = MFT.GetFile(fromPath);
                 string toPath = Manager.CurrentDir.GetFilePath() + oldFile.GetFileNameExtension() + (oldFile is Directory? "\\" : "");
                 if (PUT_FLAG)
-                    MFT.RenameFile(fromPath, toPath);
+                    toPath = MFT.RenameFile(fromPath, toPath);
                 else
-                    MFT.CopyFile(fromPath, toPath);
-                PUT_FLAG = false;                
+                    toPath = MFT.CopyFile(fromPath, toPath).GetFilePath();
                 IFile newFile = MFT.GetFile(toPath);
                 ListViewItem newItem;
                 if (oldFile is File)
@@ -249,6 +248,7 @@ namespace ex_plorer
                     newItem.Selected = true;
                 }
             }
+            PUT_FLAG = false;                
         }
         // [+]
         private void TriggerDelete(object sender, EventArgs e)

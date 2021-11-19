@@ -50,7 +50,8 @@ namespace ex_plorer.NTFS.Files
 
         public IFile Clone(IFile parent = null)
         {
-            IFile clonedDir = new Directory(MFT, FileName, parent);
+            string undefinedDirectoryName = MFT.GetUndefinedFileNameByDir(FileName, FileExtension, true, parent);
+            IFile clonedDir = new Directory(MFT, undefinedDirectoryName, parent);
             MFT.files.Add(clonedDir);
             clonedDir.SetChilds(childs.Select(file => file.Clone(clonedDir)));
             return clonedDir;
