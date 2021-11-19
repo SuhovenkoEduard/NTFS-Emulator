@@ -80,11 +80,11 @@ namespace ex_plorer
 
         internal ListViewItem GetFileItem(File file)
         {
-            ListViewItem item = new ListViewItem(file.GetFileName());
+            ListViewItem item = new ListViewItem(file.GetFileNameExtension());
             item.SubItems.AddRange(new[]
             {
-                (file.GetFileSize() / 1024).ToString(),
-                $"{file.GetFileExtension()} File",
+                (file.GetFileSize() / 1024).ToString() + " KB",
+                $".{file.FileExtension} File",
                 file.GetLastModify()
             });
             item.ImageKey = FileIcon;

@@ -83,6 +83,13 @@ namespace ex_plorer
         private void textBox1_KeyDown(object sender, KeyEventArgs e) => KeyDownHandler(sender, e);
         private void EditForm_FormClosed(object sender, FormClosedEventArgs e)
         {
+            if (saved == false)
+            {
+                DialogResult result = MessageBox.Show("Сохранить файл?", "Save file", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (result == DialogResult.Yes)
+                    SaveFile();
+            }
+
             if (Application.OpenForms.Count == 0)
                 Application.Exit();
         }

@@ -324,21 +324,11 @@ namespace ex_plorer
                 {
                     EditForm editForm = new EditForm(file);
                     editForm.ShowDialog();
-
-                    /*using (var fileStream = new FileStream(file.FullName, FileMode.OpenOrCreate))
-                    {
-                        byte[] array = new byte[fileStream.Length];
-                        fileStream.Read(array, 0, array.Length);
-                        string textFromFile = System.Text.Encoding.Default.GetString(array);
-                        EditForm editForm = new EditForm(file.Name, textFromFile, true);
-                        editForm.ShowDialog();
-                    }*/
                 }
                 catch (Exception exception)
                 {
                     MessageBox.Show("Не удалось открыть файл: " + exception.Message);
                 }
-                //Process.Start(file.FullName);
             }
             else if (info is NTFS.Files.Directory dir)
             {
@@ -361,18 +351,24 @@ namespace ex_plorer
                 e.CancelEdit = true;
                 return;
             }
-
-
+            
             IFile info = (IFile)item.Tag;
             if (info is File file)
+            {
                 MFT.RenameFile(file.GetFilePath(), Manager.CurrentDir.GetFilePath() + newName);
+                folderView.Items[e.Item] = Manager.GetFileItem((File)info);
+            }
             else if (info is Directory dir)
+            {
                 MFT.RenameFile(dir.GetFilePath(), Manager.CurrentDir.GetFilePath() + newName + "\\");
-            
-            if (e.Label != info.GetFileName())
+                folderView.Items[e.Item] = Manager.GetDirItem((Directory)info);
+            }
+
+            item = folderView.Items[e.Item];
+            if (e.Label != info.GetFileNameExtension())
             {
                 e.CancelEdit = true;
-                item.Text = info.GetFileName();
+                item.Text = info.GetFileNameExtension();
                 FolderView_AfterLabelEdit(sender, new LabelEditEventArgs(item.Index));
             }
         }

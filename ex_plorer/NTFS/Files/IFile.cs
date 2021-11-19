@@ -10,7 +10,8 @@ namespace ex_plorer.NTFS.Files
     {
         // file name
         string GetFileName();
-        
+        string GetFileNameExtension();
+
         // file path
         string GetFilePath();
         void SetFilePath(string newFilePath);

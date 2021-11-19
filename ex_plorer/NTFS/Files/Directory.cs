@@ -31,6 +31,7 @@ namespace ex_plorer.NTFS.Files
 
         // by interface
         public string GetFileName() => FileName;
+        public string GetFileNameExtension() => FileName;
         public string GetFilePath() =>
             $"{Parent?.GetFilePath()}{FileName}\\";
 
@@ -41,6 +42,7 @@ namespace ex_plorer.NTFS.Files
             Parent?.RemoveChild(this);
             Parent = MFT.GetParentDir(FilePath);
             Parent?.AddChild(this);
+            LastModify = DateTime.UtcNow.ToString();
         }
         public string GetFileExtension() => FileExtension;
         public int GetFileSize() => GetChilds().Aggregate(0, (sum, x) => sum + x.GetFileSize());
@@ -64,5 +66,6 @@ namespace ex_plorer.NTFS.Files
         public void SetChilds(IEnumerable<IFile> childs) => this.childs = childs.ToList();
         public void AddChild(IFile child) => childs.Add(child);
         public void RemoveChild(IFile child) => childs.Remove(child);
+
     }
 }

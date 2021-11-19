@@ -35,6 +35,7 @@ namespace ex_plorer.NTFS.Files
             MFT.DeallocMemory(stream.blocks);
             stream.blocks = MFT.AllocMemory((data.Length + Block1KB.SIZE - 1) / Block1KB.SIZE);
             stream.WriteData(data);
+            LastModify = DateTime.UtcNow.ToString();
         }
         public string Read() => stream.ReadData();
 
@@ -50,11 +51,13 @@ namespace ex_plorer.NTFS.Files
             Parent?.RemoveChild(this);
             Parent = MFT.GetParentDir(FilePath);
             Parent?.AddChild(this);
+            LastModify = DateTime.UtcNow.ToString();
         }
         public BlockStream GetStream() => stream;
         public IFile GetParent() => Parent;
         public void SetParent(IFile parent) => Parent = parent;
         public string GetFileName() => FileName;
+        public string GetFileNameExtension() => FileName + (string.IsNullOrEmpty(FileExtension) ? "" : "." + FileExtension);
         public string GetFilePath() =>
             $"{Parent?.GetFilePath()}{FileName}{(string.IsNullOrEmpty(FileExtension)? "" : "." + FileExtension)}";
         public string GetFileExtension() => FileExtension;
