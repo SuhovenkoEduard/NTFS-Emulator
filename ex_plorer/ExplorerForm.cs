@@ -227,6 +227,16 @@ namespace ex_plorer
             StringCollection fileNames = Clipboard.GetFileDropList();
             foreach (string fromPath in fileNames)
             {
+                if (fromPath == Manager.CurrentDir.GetFilePath())
+                {
+                    MessageBox.Show("Нельзя вставить папку саму в себя.",
+                        "Error", MessageBoxButtons.OK);
+                    return;
+                }
+            }
+
+            foreach (string fromPath in fileNames)
+            {
                 IFile oldFile = MFT.GetFile(fromPath);
                 string toPath = Manager.CurrentDir.GetFilePath() + oldFile.GetFileNameExtension() + (oldFile is Directory? "\\" : "");
                 if (fromPath == toPath) continue;

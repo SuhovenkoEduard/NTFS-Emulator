@@ -32,8 +32,7 @@ namespace ex_plorer
             set
             {
                 data = value;
-                textBox1.Text = value;
-                textBox1.Select(value.Length, 0);
+                SetTextBoxText(value);
             }
         }
         public bool Saved
@@ -51,10 +50,18 @@ namespace ex_plorer
         {
             InitializeComponent();
             this.FileName = file.GetFileName();
-            this.Data = file.Read();
+            this.data = file.Read();
+            SetTextBoxText(this.data.Replace("\n", Environment.NewLine));
             this.Saved = saved;
             this.File = file;
             SetTabWidth(this.textBox1, 1);
+        }
+
+        public void SetTextBoxText(string s)
+        {
+            textBox1.TextChanged -= textBox1_TextChanged;
+            textBox1.Text = s;
+            textBox1.TextChanged += textBox1_TextChanged;
         }
 
         public void SaveFile()
@@ -99,7 +106,7 @@ namespace ex_plorer
 
         // tab width
         private const int EM_SETTABSTOPS = 0x00CB;
-        [DllImport("User32.dll", CharSet = CharSet.Auto)]
+        [DllImport("User32.dll", CharSet = CharSet.Unicode)]
         public static extern IntPtr SendMessage(IntPtr h, int msg, int wParam, int[] lParam);
         public static void SetTabWidth(TextBox textbox, int tabWidth)
         {
@@ -107,6 +114,5 @@ namespace ex_plorer
             var characterWidth = (int)graphics.MeasureString("M", textbox.Font).Width;
             SendMessage(textbox.Handle, EM_SETTABSTOPS, 1, new int[] { tabWidth * characterWidth / 2 });
         }
-
     }
 }

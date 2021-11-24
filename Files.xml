@@ -4,397 +4,69 @@
     <FileName>C:</FileName>
     <FileExtension />
     <FilePath>C:\</FilePath>
-    <LastModify>19.11.2021 12:22:14</LastModify>
+    <LastModify>24.11.2021 18:00:56</LastModify>
     <ParentPath />
-    <IsDirectory>true</IsDirectory>
-  </SerializationFile>
-  <SerializationFile>
-    <FileName>1</FileName>
-    <FileExtension />
-    <FilePath>C:\1</FilePath>
-    <LastModify>19.11.2021 13:19:58</LastModify>
-    <Stream>
-      <blocks />
-    </Stream>
-    <ParentPath>C:\</ParentPath>
-    <IsDirectory>false</IsDirectory>
-  </SerializationFile>
-  <SerializationFile>
-    <FileName>1 (1)</FileName>
-    <FileExtension />
-    <FilePath>C:\1 (1)</FilePath>
-    <LastModify>19.11.2021 13:19:59</LastModify>
-    <Stream>
-      <blocks />
-    </Stream>
-    <ParentPath>C:\</ParentPath>
-    <IsDirectory>false</IsDirectory>
-  </SerializationFile>
-  <SerializationFile>
-    <FileName>1 (2)</FileName>
-    <FileExtension />
-    <FilePath>C:\1 (2)</FilePath>
-    <LastModify>19.11.2021 13:20:10</LastModify>
-    <Stream>
-      <blocks />
-    </Stream>
-    <ParentPath>C:\</ParentPath>
-    <IsDirectory>false</IsDirectory>
-  </SerializationFile>
-  <SerializationFile>
-    <FileName>1</FileName>
-    <FileExtension />
-    <FilePath>C:\1\</FilePath>
-    <LastModify>19.11.2021 13:20:12</LastModify>
-    <ParentPath>C:\</ParentPath>
     <IsDirectory>true</IsDirectory>
   </SerializationFile>
   <SerializationFile>
     <FileName>New file</FileName>
     <FileExtension />
-    <FilePath>C:\1\New file</FilePath>
-    <LastModify>19.11.2021 13:20:15</LastModify>
+    <FilePath>C:\New folder (1)\New file</FilePath>
+    <LastModify>24.11.2021 18:01:05</LastModify>
     <Stream>
       <blocks />
     </Stream>
-    <ParentPath>C:\1\</ParentPath>
+    <ParentPath>C:\New folder (1)\</ParentPath>
     <IsDirectory>false</IsDirectory>
   </SerializationFile>
   <SerializationFile>
     <FileName>New file (1)</FileName>
     <FileExtension />
-    <FilePath>C:\1\New file (1)</FilePath>
-    <LastModify>19.11.2021 13:20:15</LastModify>
+    <FilePath>C:\New folder (1)\New file (1)</FilePath>
+    <LastModify>24.11.2021 18:01:05</LastModify>
     <Stream>
       <blocks />
     </Stream>
-    <ParentPath>C:\1\</ParentPath>
+    <ParentPath>C:\New folder (1)\</ParentPath>
     <IsDirectory>false</IsDirectory>
   </SerializationFile>
   <SerializationFile>
-    <FileName>New file (2)</FileName>
+    <FileName>New folder</FileName>
     <FileExtension />
-    <FilePath>C:\1\New file (2)</FilePath>
-    <LastModify>19.11.2021 13:20:15</LastModify>
-    <Stream>
-      <blocks />
-    </Stream>
-    <ParentPath>C:\1\</ParentPath>
-    <IsDirectory>false</IsDirectory>
+    <FilePath>C:\New folder (1)\New folder\</FilePath>
+    <LastModify>24.11.2021 18:01:05</LastModify>
+    <ParentPath>C:\New folder (1)\</ParentPath>
+    <IsDirectory>true</IsDirectory>
   </SerializationFile>
   <SerializationFile>
-    <FileName>New file (3)</FileName>
+    <FileName>New folder (1)</FileName>
     <FileExtension />
-    <FilePath>C:\1\New file (3)</FilePath>
-    <LastModify>19.11.2021 13:20:15</LastModify>
-    <Stream>
-      <blocks />
-    </Stream>
-    <ParentPath>C:\1\</ParentPath>
-    <IsDirectory>false</IsDirectory>
-  </SerializationFile>
-  <SerializationFile>
-    <FileName>New file (4)</FileName>
-    <FileExtension />
-    <FilePath>C:\1\New file (4)</FilePath>
-    <LastModify>19.11.2021 13:20:16</LastModify>
-    <Stream>
-      <blocks />
-    </Stream>
-    <ParentPath>C:\1\</ParentPath>
-    <IsDirectory>false</IsDirectory>
+    <FilePath>C:\New folder (1)\</FilePath>
+    <LastModify>24.11.2021 18:01:00</LastModify>
+    <ParentPath>C:\</ParentPath>
+    <IsDirectory>true</IsDirectory>
   </SerializationFile>
   <SerializationFile>
     <FileName>New file</FileName>
     <FileExtension />
     <FilePath>C:\New file</FilePath>
-    <LastModify>19.11.2021 13:20:21</LastModify>
-    <Stream>
-      <blocks />
-    </Stream>
-    <ParentPath>C:\</ParentPath>
-    <IsDirectory>false</IsDirectory>
-  </SerializationFile>
-  <SerializationFile>
-    <FileName>New file (1)</FileName>
-    <FileExtension />
-    <FilePath>C:\New file (1)</FilePath>
-    <LastModify>19.11.2021 13:20:21</LastModify>
-    <Stream>
-      <blocks />
-    </Stream>
-    <ParentPath>C:\</ParentPath>
-    <IsDirectory>false</IsDirectory>
-  </SerializationFile>
-  <SerializationFile>
-    <FileName>New file (2)</FileName>
-    <FileExtension />
-    <FilePath>C:\New file (2)</FilePath>
-    <LastModify>19.11.2021 13:20:21</LastModify>
-    <Stream>
-      <blocks />
-    </Stream>
-    <ParentPath>C:\</ParentPath>
-    <IsDirectory>false</IsDirectory>
-  </SerializationFile>
-  <SerializationFile>
-    <FileName>New file (3)</FileName>
-    <FileExtension />
-    <FilePath>C:\New file (3)</FilePath>
-    <LastModify>19.11.2021 13:20:21</LastModify>
-    <Stream>
-      <blocks />
-    </Stream>
-    <ParentPath>C:\</ParentPath>
-    <IsDirectory>false</IsDirectory>
-  </SerializationFile>
-  <SerializationFile>
-    <FileName>New file (4)</FileName>
-    <FileExtension />
-    <FilePath>C:\New file (4)</FilePath>
-    <LastModify>19.11.2021 13:20:21</LastModify>
-    <Stream>
-      <blocks />
-    </Stream>
-    <ParentPath>C:\</ParentPath>
-    <IsDirectory>false</IsDirectory>
-  </SerializationFile>
-  <SerializationFile>
-    <FileName>New file (5)</FileName>
-    <FileExtension />
-    <FilePath>C:\New file (5)</FilePath>
-    <LastModify>19.11.2021 13:20:21</LastModify>
-    <Stream>
-      <blocks />
-    </Stream>
-    <ParentPath>C:\</ParentPath>
-    <IsDirectory>false</IsDirectory>
-  </SerializationFile>
-  <SerializationFile>
-    <FileName>New file (6)</FileName>
-    <FileExtension />
-    <FilePath>C:\New file (6)</FilePath>
-    <LastModify>19.11.2021 13:20:35</LastModify>
-    <Stream>
-      <blocks />
-    </Stream>
-    <ParentPath>C:\</ParentPath>
-    <IsDirectory>false</IsDirectory>
-  </SerializationFile>
-  <SerializationFile>
-    <FileName>New file (1) (1)</FileName>
-    <FileExtension />
-    <FilePath>C:\New file (1) (1)</FilePath>
-    <LastModify>19.11.2021 13:20:35</LastModify>
-    <Stream>
-      <blocks />
-    </Stream>
-    <ParentPath>C:\</ParentPath>
-    <IsDirectory>false</IsDirectory>
-  </SerializationFile>
-  <SerializationFile>
-    <FileName>New file (2) (1)</FileName>
-    <FileExtension />
-    <FilePath>C:\New file (2) (1)</FilePath>
-    <LastModify>19.11.2021 13:20:35</LastModify>
-    <Stream>
-      <blocks />
-    </Stream>
-    <ParentPath>C:\</ParentPath>
-    <IsDirectory>false</IsDirectory>
-  </SerializationFile>
-  <SerializationFile>
-    <FileName>New file (3) (1)</FileName>
-    <FileExtension />
-    <FilePath>C:\New file (3) (1)</FilePath>
-    <LastModify>19.11.2021 13:20:35</LastModify>
-    <Stream>
-      <blocks />
-    </Stream>
-    <ParentPath>C:\</ParentPath>
-    <IsDirectory>false</IsDirectory>
-  </SerializationFile>
-  <SerializationFile>
-    <FileName>New file (4) (1)</FileName>
-    <FileExtension />
-    <FilePath>C:\New file (4) (1)</FilePath>
-    <LastModify>19.11.2021 13:20:35</LastModify>
-    <Stream>
-      <blocks />
-    </Stream>
-    <ParentPath>C:\</ParentPath>
-    <IsDirectory>false</IsDirectory>
-  </SerializationFile>
-  <SerializationFile>
-    <FileName>1</FileName>
-    <FileExtension />
-    <FilePath>C:\1\1\</FilePath>
-    <LastModify>19.11.2021 13:21:04</LastModify>
-    <ParentPath>C:\1\</ParentPath>
-    <IsDirectory>true</IsDirectory>
-  </SerializationFile>
-  <SerializationFile>
-    <FileName>added</FileName>
-    <FileExtension />
-    <FilePath>C:\1\added</FilePath>
-    <LastModify>19.11.2021 13:22:45</LastModify>
+    <LastModify>24.11.2021 18:01:29</LastModify>
     <Stream>
       <blocks>
         <Block1KB>
-          <data>ghfjkhgfjkgdghjkfkhgdkjgk
-NEW FILE
+          <data>dfgdf
+jhhkj
 
-___
-</data>
+
+
+kjhkhjk
+		
+	
+	fdds	</data>
         </Block1KB>
       </blocks>
     </Stream>
-    <ParentPath>C:\1\</ParentPath>
-    <IsDirectory>false</IsDirectory>
-  </SerializationFile>
-  <SerializationFile>
-    <FileName>New file (1)</FileName>
-    <FileExtension />
-    <FilePath>C:\1\1\New file (1)</FilePath>
-    <LastModify>19.11.2021 13:21:04</LastModify>
-    <Stream>
-      <blocks />
-    </Stream>
-    <ParentPath>C:\1\1\</ParentPath>
-    <IsDirectory>false</IsDirectory>
-  </SerializationFile>
-  <SerializationFile>
-    <FileName>New file (2)</FileName>
-    <FileExtension />
-    <FilePath>C:\1\1\New file (2)</FilePath>
-    <LastModify>19.11.2021 13:21:04</LastModify>
-    <Stream>
-      <blocks />
-    </Stream>
-    <ParentPath>C:\1\1\</ParentPath>
-    <IsDirectory>false</IsDirectory>
-  </SerializationFile>
-  <SerializationFile>
-    <FileName>New file (3)</FileName>
-    <FileExtension />
-    <FilePath>C:\1\1\New file (3)</FilePath>
-    <LastModify>19.11.2021 13:21:04</LastModify>
-    <Stream>
-      <blocks />
-    </Stream>
-    <ParentPath>C:\1\1\</ParentPath>
-    <IsDirectory>false</IsDirectory>
-  </SerializationFile>
-  <SerializationFile>
-    <FileName>New file (4)</FileName>
-    <FileExtension />
-    <FilePath>C:\1\1\New file (4)</FilePath>
-    <LastModify>19.11.2021 13:21:04</LastModify>
-    <Stream>
-      <blocks />
-    </Stream>
-    <ParentPath>C:\1\1\</ParentPath>
-    <IsDirectory>false</IsDirectory>
-  </SerializationFile>
-  <SerializationFile>
-    <FileName>1</FileName>
-    <FileExtension />
-    <FilePath>C:\1\1</FilePath>
-    <LastModify>19.11.2021 13:21:04</LastModify>
-    <Stream>
-      <blocks />
-    </Stream>
-    <ParentPath>C:\1\</ParentPath>
-    <IsDirectory>false</IsDirectory>
-  </SerializationFile>
-  <SerializationFile>
-    <FileName>1 (1)</FileName>
-    <FileExtension />
-    <FilePath>C:\1\1 (1)</FilePath>
-    <LastModify>19.11.2021 13:21:04</LastModify>
-    <Stream>
-      <blocks />
-    </Stream>
-    <ParentPath>C:\1\</ParentPath>
-    <IsDirectory>false</IsDirectory>
-  </SerializationFile>
-  <SerializationFile>
-    <FileName>1 (2)</FileName>
-    <FileExtension />
-    <FilePath>C:\1\1 (2)</FilePath>
-    <LastModify>19.11.2021 13:21:04</LastModify>
-    <Stream>
-      <blocks />
-    </Stream>
-    <ParentPath>C:\1\</ParentPath>
-    <IsDirectory>false</IsDirectory>
-  </SerializationFile>
-  <SerializationFile>
-    <FileName>New file (5)</FileName>
-    <FileExtension />
-    <FilePath>C:\1\New file (5)</FilePath>
-    <LastModify>19.11.2021 13:21:04</LastModify>
-    <Stream>
-      <blocks />
-    </Stream>
-    <ParentPath>C:\1\</ParentPath>
-    <IsDirectory>false</IsDirectory>
-  </SerializationFile>
-  <SerializationFile>
-    <FileName>New file (1) (1)</FileName>
-    <FileExtension />
-    <FilePath>C:\1\New file (1) (1)</FilePath>
-    <LastModify>19.11.2021 13:21:04</LastModify>
-    <Stream>
-      <blocks />
-    </Stream>
-    <ParentPath>C:\1\</ParentPath>
-    <IsDirectory>false</IsDirectory>
-  </SerializationFile>
-  <SerializationFile>
-    <FileName>New file (3) (1) (1)</FileName>
-    <FileExtension />
-    <FilePath>C:\1\New file (3) (1) (1)</FilePath>
-    <LastModify>19.11.2021 13:21:04</LastModify>
-    <Stream>
-      <blocks />
-    </Stream>
-    <ParentPath>C:\1\</ParentPath>
-    <IsDirectory>false</IsDirectory>
-  </SerializationFile>
-  <SerializationFile>
-    <FileName>New file (4) (1) (1)</FileName>
-    <FileExtension />
-    <FilePath>C:\1\New file (4) (1) (1)</FilePath>
-    <LastModify>19.11.2021 13:21:04</LastModify>
-    <Stream>
-      <blocks />
-    </Stream>
-    <ParentPath>C:\1\</ParentPath>
-    <IsDirectory>false</IsDirectory>
-  </SerializationFile>
-  <SerializationFile>
-    <FileName>1 (1)</FileName>
-    <FileExtension />
-    <FilePath>C:\1\1 (1)\</FilePath>
-    <LastModify>19.11.2021 13:22:06</LastModify>
-    <ParentPath>C:\1\</ParentPath>
-    <IsDirectory>true</IsDirectory>
-  </SerializationFile>
-  <SerializationFile>
-    <FileName>new file</FileName>
-    <FileExtension />
-    <FilePath>C:\1\1\new file</FilePath>
-    <LastModify>19.11.2021 13:22:59</LastModify>
-    <Stream>
-      <blocks>
-        <Block1KB>
-          <data>fdffdgdg
-</data>
-        </Block1KB>
-      </blocks>
-    </Stream>
-    <ParentPath>C:\1\1\</ParentPath>
+    <ParentPath>C:\</ParentPath>
     <IsDirectory>false</IsDirectory>
   </SerializationFile>
 </ArrayOfSerializationFile>

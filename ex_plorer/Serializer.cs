@@ -1,6 +1,7 @@
 ﻿using ex_plorer.NTFS;
 using ex_plorer.NTFS.Files;
 using System;
+using System.Xml;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
