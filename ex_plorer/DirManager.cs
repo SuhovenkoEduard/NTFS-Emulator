@@ -22,15 +22,12 @@ namespace ex_plorer
         internal ImageList LargeIcons { get; }
         internal ImageList SmallIcons { get; }
 
-        internal List<string> IconsSet { get; }
-
         internal DirManager(MasterFileTable MFT, string path)
         {
             this.MFT = MFT;
             CurrentDir = (Directory) MFT.GetFile(path);
 
             // icons
-            IconsSet = new List<string>();
             LargeIcons = new ImageList
             {
                 ImageSize = new Size(32, 32),

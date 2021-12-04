@@ -14,10 +14,6 @@ namespace ex_plorer.NTFS
         public List<Block1KB> busyMemory;
         [XmlIgnore]
         public List<IFile> files;
-
-        public int FreeBlocks => freeMemory.Count;
-        public int BusyBlocks => busyMemory.Count;
-        public int AllBlocks => FreeBlocks + BusyBlocks;
         
         public MasterFileTable() { }
         public MasterFileTable(int sizeInBlocks = 100, string diskName = "C:")
@@ -137,7 +133,7 @@ namespace ex_plorer.NTFS
         // memory
         public List<Block1KB> AllocMemory(int sizeInBlocks)
         {
-            if (sizeInBlocks > FreeBlocks)
+            if (sizeInBlocks > freeMemory.Count)
             {
                 MessageBox.Show("Недостаточно свободной памяти.");
                 return null;
