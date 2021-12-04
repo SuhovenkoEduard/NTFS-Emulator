@@ -148,8 +148,6 @@ namespace ex_plorer.NTFS
             blocks.ForEach(block => busyMemory.Remove(block));
             blocks.ForEach(block => freeMemory.Add(block));
         }
-
-        public bool IsPathRooted(string path) => (files[0].GetFilePath() == path);
         public bool Exists(string path) => (GetFile(path) != null);
     }
 }

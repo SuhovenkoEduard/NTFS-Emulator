@@ -15,6 +15,5 @@ namespace ex_plorer.NTFS
             : base(SIZE, data) { }
         
         public void WriteSync(Block1KB block) => data = block.data;
-        public string ReadSync() => data;
     }
 }
